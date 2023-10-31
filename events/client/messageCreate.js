@@ -26,8 +26,13 @@ module.exports = {
         await client.admins.find((x) => x === message.author.id),
       ]);
 
-    if (message.content.toLowerCase().includes('jsk'))
-      return await client.emit('dokdo', message);
+    if (message.content.toLowerCase().includes('jsk')) {
+      const pfx =
+        noPrefixUser && !message.content.startsWith(client.prefix)
+          ? ''
+          : client.prefix;
+      return await client.emit('dokdo', message, pfx);
+    }
 
     let prefix = client.prefix;
 
