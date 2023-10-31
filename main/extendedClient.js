@@ -9,15 +9,7 @@ module.exports = class ExtendedClient extends Client {
     super({
       intents: 3276543,
 
-      restTimeOffset: 0,
-
-      fetchAllMembers: true,
-      failIfNotExists: true,
-      disableEveryone: true,
-
-      messageCacheMaxSize: 10,
-      messageCacheLifetime: 60,
-      restWsBridgetimeout: 100,
+      failIfNotExists: false,
 
       allowedMentions: {
         repliedUser: false,
