@@ -1,0 +1,42 @@
+{
+  "name": "emerald",
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "A discord.js based bot framework",
+  "author": "painfuego",
+  "main": "launcher.js",
+  "scripts": {
+    "start": "node launcher.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@db": "./database",
+    "@utils": "./utils",
+    "@assets": "./assets",
+    "@loaders": "./loaders",
+    "@plugins": "./plugins",
+    "@functions": "./functions"
+  },
+  "dependencies": {
+    "@joshdb/core": "^1.2.7",
+    "@joshdb/json": "^1.0.5",
+    "chalk": "4.1.2",
+    "dir-archiver": "^2.1.0",
+    "discord-hybrid-sharding": "^2.1.3",
+    "discord.js": "^14.13.0",
+    "dokdo": "^0.6.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "module-alias": "^2.2.3",
+    "moment": "^2.29.4",
+    "moment-duration-format": "^2.3.2",
+    "mongoose": "^7.4.3",
+    "ms": "^2.1.3",
+    "os-utils": "^0.0.14",
+    "voucher-code-generator": "^1.3.0"
+  },
+  "devDependencies": {}
+}

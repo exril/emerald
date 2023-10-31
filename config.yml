@@ -1,0 +1,23 @@
+# @format
+
+BOT:
+  OWNERS: ['692617937512562729']
+  ADMINS: ['692617937512562729']
+
+LINKS:
+  SUPPORT: 'https://discord.gg/uY5BXAfd'
+  MONGO_URI: ''
+
+CLIENT:
+  PREFIX: 'e'
+  COLOR: '#FF0000'
+  SHARDS: 1 #value must be 'auto' or <integer>
+  PER_CLUSTER: 2 #value must be <integer>
+  TOKEN: ''
+  TOPGGAUTH: ''
+  VOTEURI: ''
+
+MANAGER:
+  PREFIX: ''
+  COLOR: ''
+  TOKEN: ''
