@@ -13,6 +13,11 @@ module.exports = async (client) => {
   mongoose.set('strictQuery', true);
   mongoose.Promise = global.Promise;
 
+  if (!client.config.links.mongoURI)
+    return client.log(
+      `Mongoose not loaded !!! No valid Mongo URI provided !!`,
+      `error`,
+    );
   mongoose.connect(client.config.links.mongoURI, dbOptions).catch((e) => {
     client.log(`Mongoose connection error ${e}`, 'error');
   });

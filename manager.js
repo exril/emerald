@@ -1,38 +1,35 @@
 /** @format */
-
-const cron = require('node-cron');
+require('dotenv').config();
+require('./utils/web_server');
 const YML = require('js-yaml').load(
   require('fs').readFileSync('./config.yml', 'utf8'),
 );
-
-const {
-  Client,
-  ActivityType,
-  ActionRowBuilder,
-  StringSelectMenuBuilder,
-} = require('discord.js');
+const cron = require('node-cron');
+const { Client } = require('discord.js');
+const { ActivityType } = require('discord.js');
 const client = new Client({ intents: 3276799 });
+const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 
 const sleep = (t) => {
   return new Promise((r) => setTimeout(r, t));
 };
 
 client.on('ready', async () => {
-  require('@plugins/logger').log(
+  require('./plugins/logger').log(
     `Ready! Logged in as ${client.user.tag}`,
     'manager',
   );
-  client.prefix = YML.MANAGER.PREFIX;
+  client.prefix = '!';
   client.config = require('./config/options');
   client.admins = client.config.bot.admins;
   client.owners = client.config.bot.owners;
   client.support = client.config.links.support;
-  client.emoji = require('@assets/emoji');
-  client.embed = require('@plugins/embed');
-  client.button = require('@plugins/button');
-  client.premium = require('@database/premium');
-  client.vouchers = require('@database/vouchers');
-  await client.user.setPresence({
+  client.emoji = require('./assets/emoji');
+  client.embed = require('./plugins/embed');
+  client.button = require('./plugins/button');
+  client.premium = require('./database/premium');
+  client.vouchers = require('./database/vouchers');
+  client.user.setPresence({
     activities: [
       {
         name: 'Executing Backup-Manager.exe',
@@ -48,7 +45,7 @@ client.on('ready', async () => {
   await toDel.forEach(async (m) => await m.delete());
   await channel.send('Backup Manager Started');
 
-  cron.schedule('0 */5 * * *', async () => {
+  cron.schedule('0 */1 * * *', async () => {
     const backup_zip_creator = require('./functions/zipper.js');
 
     const backup_zip_manager = async () => {
@@ -66,10 +63,10 @@ client.on('ready', async () => {
         })
         .then(async (msg) => {
           const fs = require('fs');
-          await fs.unlink(file, () => {
+          fs.unlink(file, () => {
             return;
           });
-          await setTimeout(async () => {
+          setTimeout(async () => {
             await msg.delete();
           }, 5 * 60 * 1000);
         });
@@ -172,11 +169,17 @@ client.on('messageCreate', async (message) => {
             value: '1050423676689985606',
             emoji: `${client.emoji.a_}`,
           },
+          {
+            label: 'Fuego Prime',
+            value: '1087627654888443925',
+            emoji: `${client.emoji.b_}`,
+          },
         ]);
       const row = new ActionRowBuilder().addComponents(menu);
       await client.vouchers.delete(args[0]);
       const m = await message.channel.send({
-        content: 'Choose an option below. . .',
+        //embeds: [embed],
+        content: 'Premium lelo guyz. . .',
         components: [row],
       });
       const collector = m?.createMessageComponentCollector({

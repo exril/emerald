@@ -103,8 +103,9 @@ module.exports = class ExtendedClient extends Client {
       const handler = require('@functions/handleReadyEvent.js')(client);
 
       await require('@functions/setStatus.js')(client);
-      //await require('@loaders/mongoose.js')(client);
+      await require('@loaders/mongoose.js')(client);
       await require('@loaders/clientEvents.js')(client);
+      await require('@loaders/customEvents.js')(client);
       await require('@loaders/commands.js')(client);
 
       this.log(
