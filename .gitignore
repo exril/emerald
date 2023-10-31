@@ -1,8 +1,4 @@
 josh-data
-npm-shrinkwrap.json
-package-lock.json
-.vscode
-.prettierrc
 logs
 *.log
 npm-debug.log*

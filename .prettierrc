@@ -1,0 +1,10 @@
+# @format
+
+{
+  'tabWidth': 2,
+  'useTabs': false,
+  'insertPragma': true,
+  'trailingComma': 'all',
+  'semi': true,
+  'singleQuote': true,
+}
