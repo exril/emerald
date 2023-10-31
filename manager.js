@@ -1,5 +1,6 @@
 /** @format */
 
+const cron = require('node-cron');
 const YML = require('js-yaml').load(
   require('fs').readFileSync('./config.yml', 'utf8'),
 );
@@ -47,8 +48,7 @@ client.on('ready', async () => {
   await toDel.forEach(async (m) => await m.delete());
   await channel.send('Backup Manager Started');
 
-  const interval = 2 * 60 * 1000;
-  setTimeout(async function backup() {
+  cron.schedule('0 */5 * * *', async () => {
     const backup_zip_creator = require('./functions/zipper.js');
 
     const backup_zip_manager = async () => {
@@ -71,16 +71,12 @@ client.on('ready', async () => {
           });
           await setTimeout(async () => {
             await msg.delete();
-          }, interval);
+          }, 5 * 60 * 1000);
         });
     };
 
-    const run = async () => {
-      await backup_zip_manager();
-    };
-    await run();
-    await setTimeout(backup, interval);
-  }, interval);
+    await backup_zip_manager();
+  });
 });
 
 client.on('messageCreate', async (message) => {
