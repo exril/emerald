@@ -5,7 +5,7 @@ const YML = require('js-yaml').load(
 );
 
 const client = new (require('../main/extendedClient'))();
-require('../utils/error_handler')(client);
+require('@utils/error_handler')(client);
 client.connect(
   YML.CLIENT.TOKEN,
   YML.CLIENT.PREFIX,

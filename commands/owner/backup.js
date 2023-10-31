@@ -17,7 +17,7 @@ module.exports = {
     const moment = require('moment');
     const date = moment().format('DD-MM-YYYY_hh-mm-ss');
 
-    const backup_zip_creator = require('../../functions/zipper.js');
+    const backup_zip_creator = require('@functions/zipper.js');
 
     const backup_zip_manager = async (msg) => {
       const file = `./fuego-${args[0] ? `${args[0]}-` : ``}${date}.zip`;

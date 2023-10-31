@@ -234,7 +234,5 @@ module.exports = {
     }
 
     command.execute(client, message, args);
-    let total = (await client.cmds_used.get(`${client.user.id}`)) || 0;
-    await client.cmds_used.set(`${client.user.id}`, total + 1);
   },
 };

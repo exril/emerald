@@ -76,9 +76,6 @@ module.exports = {
       });
     }
 
-    embed.setFooter({
-      text: `${await client.cmds_used.get(client.user.id)} Cmds used`,
-    });
     msg.edit({ embeds: [embed] });
   },
 };

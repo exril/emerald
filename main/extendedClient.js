@@ -51,7 +51,6 @@ module.exports = class ExtendedClient extends Client {
     this.vouchers = require('@db/vouchers.js');
     this.noPrefix = require('@db/noPrefix.js');
     this.blacklist = require('@db/blacklist.js');
-    this.cmds_used = require('@db/cmds_used.js');
 
     this.formatTime = require('@functions/formatTime.js');
     this.formatBytes = require('@functions/formatBytes.js');
