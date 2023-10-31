@@ -9,8 +9,8 @@ LINKS:
   MONGO_URI: ''
 
 CLIENT:
-  PREFIX: 'e'
-  COLOR: '#FF0000'
+  PREFIX: ''
+  COLOR: ''
   SHARDS: 1 #value must be 'auto' or <integer>
   PER_CLUSTER: 2 #value must be <integer>
   TOKEN: ''
