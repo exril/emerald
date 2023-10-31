@@ -12,7 +12,7 @@ module.exports = {
   },
 
   links: {
-    support: YML.LINKS.SUPPORT,
+    support: YML.LINKS.SUPPORT || 'https://discord.gg/uY5BXAfd',
     mongoURI: YML.LINKS.MONGO_URI,
   },
 };

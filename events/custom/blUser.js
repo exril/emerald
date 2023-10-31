@@ -17,7 +17,7 @@ module.exports = {
         components: [
           new ActionRowBuilder().addComponents(
             new client.button()
-              .link('Click to join Support Server', client.config.links.support)
+              .link('Click to join Support Server', client.support)
               .setEmoji(client.emoji.support),
           ),
         ],
