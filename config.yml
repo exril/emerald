@@ -13,7 +13,7 @@ CLIENT:
   COLOR: '#FF0000'
   SHARDS: 1 #value must be 'auto' or <integer>
   PER_CLUSTER: 2 #value must be <integer>
-  TOKEN: ''
+  TOKEN: 'MTA5MzgyMDYyMjY1NzgxODY5NA.XXXGrfQUz.68CZtpz502XleaYP4e3qH7kO6hKFkr-m_ZZOPQ'
   TOPGGAUTH: ''
   VOTEURI: ''
 
