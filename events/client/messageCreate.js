@@ -1,5 +1,7 @@
 /** @format */
-const { RateLimitManager } = require('@sapphire/ratelimits');
+
+const { RateLimitManager } = require("@sapphire/ratelimits");
+const rateLimitManager = new RateLimitManager(60000, 12);
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -7,7 +9,6 @@ const fetch = (...args) =>
 module.exports = {
   name: "messageCreate",
   run: async (client, message) => {
-    const { cooldowns } = client;
     if (
       message.author.bot ||
       !message ||
@@ -72,14 +73,16 @@ module.exports = {
       return await client.emit("blUser", message, blacklistUser);
     }
 
-    if (!cooldowns.has(command.name)) {
-      cooldowns.set(command.name, new (require("discord.js").Collection)());
+    if (!client.cooldowns.has(command.name)) {
+      client.cooldowns.set(
+        command.name,
+        new (require("discord.js").Collection)(),
+      );
     }
 
     const now = Date.now();
-    const timestamps = cooldowns.get(command.name);
-    const defaultCooldownDuration = parseInt(command.cooldown) || 5;
-    const cooldownAmount = (command.cooldown ?? defaultCooldownDuration) * 1000;
+    const timestamps = client.cooldowns.get(command.name);
+    const cooldownAmount = parseInt(command.cooldown) || 5000;
 
     if (timestamps.has(message.author.id) && !developer) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
@@ -105,16 +108,12 @@ module.exports = {
     timestamps.set(message.author.id, now);
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
-    // Implement @sapphire/ratelimits
+    const bucket = rateLimitManager.acquire(`${message.author.id}`);
 
-    let timeOutMsgCount = client.config.antiAbuseBot.timeOutMsgCount
-    let timeBetweenEachCmd = client.config.antiAbuseBot.timeBetweenEachCmd;
+    if (bucket.limited)
+      return client.blacklist.set(`${message.author.id}`, true);
 
-    const ratelimit = new RateLimitManager(timeBetweenEachCmd, timeOutMsgCount);
-
-    if (ratelimit.limited) client.blacklist.set(`${message.author.id}`, "warned")
-
-    ratelimit.consume();
+    bucket.consume();
 
     if (
       !message.channel
