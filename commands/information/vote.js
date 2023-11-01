@@ -1,13 +1,13 @@
 /** @format */
 
-const { ActionRowBuilder } = require('discord.js');
+const { ActionRowBuilder } = require("discord.js");
 
 module.exports = {
-  name: 'vote',
+  name: "vote",
   aliases: [],
-  cooldown: '',
-  category: 'information',
-  usage: '',
+  cooldown: "",
+  category: "information",
+  usage: "",
   description: "Shows bot's vote link",
   args: false,
   vote: false,
@@ -18,7 +18,7 @@ module.exports = {
   execute: async (client, message, args) => {
     const row = new ActionRowBuilder().addComponents(
       new client.button()
-        .link('Click to Vote me on Top.gg', client.vote || client.support)
+        .link("Click to Vote me on Top.gg", client.vote || client.support)
         .setEmoji(client.emoji.love),
     );
     message.channel.send({ components: [row] });

@@ -1,9 +1,9 @@
 /** @format */
 
-const fs = require('fs');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const yaml = require("js-yaml");
 
-const YML = yaml.load(fs.readFileSync('./config.yml', 'utf8'));
+const YML = yaml.load(fs.readFileSync("./config.yml", "utf8"));
 
 module.exports = {
   bot: {
@@ -12,7 +12,7 @@ module.exports = {
   },
 
   links: {
-    support: YML.LINKS.SUPPORT || 'https://discord.gg/uY5BXAfd',
+    support: YML.LINKS.SUPPORT || "https://discord.gg/uY5BXAfd",
     mongoURI: YML.LINKS.MONGO_URI,
   },
 };

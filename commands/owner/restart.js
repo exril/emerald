@@ -1,12 +1,12 @@
 /** @format */
 
 module.exports = {
-  name: 'restart',
+  name: "restart",
   aliases: [],
-  cooldown: '',
-  category: 'owner',
-  usage: '',
-  description: 'Respawns all shards',
+  cooldown: "",
+  category: "owner",
+  usage: "",
+  description: "Respawns all shards",
   args: false,
   vote: false,
   admin: false,
@@ -21,7 +21,7 @@ module.exports = {
         ),
       ],
     });
-    client.log(`Killing and respawning all shards`, 'debug'),
+    client.log(`Killing and respawning all shards`, "debug"),
       await client.cluster.respawnAll();
   },
 };

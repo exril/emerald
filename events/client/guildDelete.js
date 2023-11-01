@@ -1,7 +1,7 @@
 /** @format */
 
 module.exports = {
-  name: 'guildDelete',
+  name: "guildDelete",
   run: async (client, guild) => {
     if (!guild.name) return;
   },

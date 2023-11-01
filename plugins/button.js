@@ -1,11 +1,11 @@
 /** @format */
 
-const { ButtonStyle, ButtonBuilder } = require('discord.js');
+const { ButtonStyle, ButtonBuilder } = require("discord.js");
 
 module.exports = class button extends ButtonBuilder {
   makeButton(customId, label, emoji, style, disabled = false) {
     if (!label && !emoji)
-      throw new Error('Must provide either label or emoji !');
+      throw new Error("Must provide either label or emoji !");
 
     this.setCustomId(customId);
     this.setStyle(style);

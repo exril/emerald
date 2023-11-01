@@ -1,10 +1,10 @@
 /** @format */
 
 const fetch = (...args) =>
-  import('node-fetch').then(({ default: fetch }) => fetch(...args));
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 module.exports = {
-  name: 'messageCreate',
+  name: "messageCreate",
   run: async (client, message) => {
     const { cooldowns } = client;
     if (
@@ -26,12 +26,12 @@ module.exports = {
         await client.admins.find((x) => x === message.author.id),
       ]);
 
-    if (message.content.toLowerCase().includes('jsk')) {
+    if (message.content.toLowerCase().includes("jsk")) {
       const pfx =
         noPrefixUser && !message.content.startsWith(client.prefix)
-          ? ''
+          ? ""
           : client.prefix;
-      return await client.emit('dokdo', message, pfx);
+      return await client.emit("dokdo", message, pfx);
     }
 
     let prefix = client.prefix;
@@ -40,17 +40,17 @@ module.exports = {
 
     if (message.content.match(mention)) {
       if (blacklistUser)
-        return await client.emit('blUser', message, blacklistUser);
-      return await client.emit('mention', message);
+        return await client.emit("blUser", message, blacklistUser);
+      return await client.emit("mention", message);
     }
 
     prefix =
       (noPrefixUser || premiumUser) &&
       !message.content.startsWith(client.prefix)
-        ? ''
+        ? ""
         : client.prefix;
 
-    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const prefixRegex = new RegExp(
       `^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`,
     );
@@ -68,11 +68,11 @@ module.exports = {
     if (!command) return;
 
     if (blacklistUser) {
-      return await client.emit('blUser', message, blacklistUser);
+      return await client.emit("blUser", message, blacklistUser);
     }
 
     if (!cooldowns.has(command.name)) {
-      cooldowns.set(command.name, new (require('discord.js').Collection)());
+      cooldowns.set(command.name, new (require("discord.js").Collection)());
     }
 
     const now = Date.now();
@@ -107,14 +107,14 @@ module.exports = {
     if (
       !message.channel
         .permissionsFor(message.guild.members.me)
-        ?.has('ViewChannel')
+        ?.has("ViewChannel")
     )
       return;
 
     if (
       !message.channel
         .permissionsFor(message.guild.members.me)
-        ?.has('SendMessages')
+        ?.has("SendMessages")
     )
       return await message.author
         .send({
@@ -129,7 +129,7 @@ module.exports = {
     if (
       !message.channel
         .permissionsFor(message.guild.members.me)
-        ?.has('EmbedLinks')
+        ?.has("EmbedLinks")
     )
       return await message.author
         .send({
@@ -160,7 +160,7 @@ module.exports = {
     ) {
       embed.desc(
         `${client.emoji.warn} **You need \`${command.userPerms.join(
-          ', ',
+          ", ",
         )}\` permission/s to use this command**`,
       );
       return message.channel.send({ embeds: [embed] });
@@ -173,7 +173,7 @@ module.exports = {
         ?.has(command.botPerms)
     ) {
       embed.desc(
-        `${client.emoji.warn} **I need \`${command.userPerms.join(', ')}\` in ${
+        `${client.emoji.warn} **I need \`${command.userPerms.join(", ")}\` in ${
           message.channel
         } permission/s to execute this command**`,
       );
@@ -207,7 +207,7 @@ module.exports = {
         await fetch(
           `https://top.gg/api/bots/${client.user.id}/check?userId=${message.author.id}`,
           {
-            method: 'GET',
+            method: "GET",
             headers: {
               Authorization: client.topGgAuth,
             },

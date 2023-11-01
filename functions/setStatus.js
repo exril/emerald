@@ -1,6 +1,6 @@
 /** @format */
 
-const { ActivityType } = require('discord.js');
+const { ActivityType } = require("discord.js");
 
 module.exports = setStatus = async (client) => {
   let gc = async () => {
@@ -54,7 +54,7 @@ module.exports = setStatus = async (client) => {
           type: status.type,
         },
       ],
-      status: 'online',
+      status: "online",
     });
   }, 10000);
 };

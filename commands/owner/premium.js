@@ -1,14 +1,14 @@
 /** @format */
 
-const pagination = require('@functions/pagination.js');
+const pagination = require("@functions/pagination.js");
 
 module.exports = {
-  name: 'premium',
+  name: "premium",
   aliases: [],
-  cooldown: '',
-  category: 'owner',
-  usage: '<add/del> <mention>',
-  description: 'Add/remove premium',
+  cooldown: "",
+  category: "owner",
+  usage: "<add/del> <mention>",
+  description: "Add/remove premium",
   args: false,
   vote: false,
   admin: true,
@@ -47,7 +47,7 @@ module.exports = {
               },
             )
             .thumb(
-              'https://media.discordapp.net/attachments/1162750317004345396/1166771983179071548/8ef5f8c801f3cdbcb74794e2b153f445.webp?ex=654bb416&is=65393f16&hm=f74c229b5f5174c02a68503bd9c5c54e179ca9b5b983848e1ae2ff175ea22a0b&',
+              "https://media.discordapp.net/attachments/1162750317004345396/1166771983179071548/8ef5f8c801f3cdbcb74794e2b153f445.webp?ex=654bb416&is=65393f16&hm=f74c229b5f5174c02a68503bd9c5c54e179ca9b5b983848e1ae2ff175ea22a0b&",
             ),
         ],
       });
@@ -57,7 +57,7 @@ module.exports = {
     let valid = (await client.users.fetch(id).catch(() => {})) || null;
     const exist = await client.premiun.get(`${client.user.id}_${id}`);
 
-    if (!valid && !args[1] == 'list')
+    if (!valid && !args[1] == "list")
       return message.channel.send({
         embeds: [
           new client.embed().desc(`${client.emoji.no} **Invalid User**`),
@@ -65,7 +65,7 @@ module.exports = {
       });
 
     switch (args[0].toLowerCase()) {
-      case 'add':
+      case "add":
         {
           if (!exist)
             return message.channel.send({
@@ -87,10 +87,10 @@ module.exports = {
         }
         break;
 
-      case 'rem':
-      case 'del':
-      case 'remove':
-      case 'delete':
+      case "rem":
+      case "del":
+      case "remove":
+      case "delete":
         {
           if (!exist)
             return message.channel.send({
@@ -111,10 +111,10 @@ module.exports = {
           });
         }
         break;
-      case 'list':
+      case "list":
         let ids = (await client.premium.keys)
           .filter((key) => key.includes(client.user.id))
-          .map((key) => key.split('_')[1]);
+          .map((key) => key.split("_")[1]);
         ids = [...ids];
         if (!ids.length)
           return message.channel.send({
@@ -131,8 +131,8 @@ module.exports = {
             `**• [${user.username}](https://discord.com/users/${user.id}) [${user.id}]**`,
           );
         }
-        const mapping = require('lodash').chunk(names, 10);
-        const descriptions = mapping.map((s) => s.join('\n'));
+        const mapping = require("lodash").chunk(names, 10);
+        const descriptions = mapping.map((s) => s.join("\n"));
         var pages = [];
         for (let i = 0; i < descriptions.length; i++) {
           const embed = new client.embed()

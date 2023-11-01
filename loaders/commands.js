@@ -1,12 +1,12 @@
 /** @format */
 
-const { readdirSync } = require('fs');
+const { readdirSync } = require("fs");
 
 module.exports = async (client) => {
   let count = 0;
-  readdirSync('./commands').forEach((dir) => {
+  readdirSync("./commands").forEach((dir) => {
     const commandFiles = readdirSync(`./commands/${dir}/`).filter((f) =>
-      f.endsWith('.js'),
+      f.endsWith(".js"),
     );
     for (const file of commandFiles) {
       count++;
@@ -14,5 +14,5 @@ module.exports = async (client) => {
       client.commands.set(command.name, command);
     }
   });
-  client.log(`Loaded ${count} Commands`, 'cmd');
+  client.log(`Loaded ${count} Commands`, "cmd");
 };

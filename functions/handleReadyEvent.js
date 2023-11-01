@@ -12,7 +12,7 @@ module.exports = (client) => {
     admin: `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`,
   };
 
-  client.log(`Logged in to ${client.user.username}`, 'debug');
+  client.log(`Logged in to ${client.user.username}`, "debug");
 
   return [gcount, mcount];
 };

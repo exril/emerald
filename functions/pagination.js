@@ -1,6 +1,6 @@
 /** @format */
 
-const { ActionRowBuilder } = require('discord.js');
+const { ActionRowBuilder } = require("discord.js");
 
 module.exports = async (client, message, pages) => {
   let page = 0;
@@ -26,11 +26,11 @@ module.exports = async (client, message, pages) => {
     time: 30000,
   });
 
-  collector.on('collect', async (i) => {
+  collector.on("collect", async (i) => {
     await i.deferUpdate();
 
     switch (i.customId) {
-      case 'home':
+      case "home":
         page = 0;
         await curPage
           .edit({
@@ -43,7 +43,7 @@ module.exports = async (client, message, pages) => {
           .catch(() => {});
         break;
 
-      case 'back':
+      case "back":
         page = page > 0 ? --page : pages.length - 1;
         await curPage
           .edit({
@@ -56,7 +56,7 @@ module.exports = async (client, message, pages) => {
           .catch(() => {});
         break;
 
-      case 'next':
+      case "next":
         page = page + 1 < pages.length ? ++page : 0;
         await curPage
           .edit({
@@ -69,13 +69,13 @@ module.exports = async (client, message, pages) => {
           .catch(() => {});
         break;
 
-      case 'end':
+      case "end":
         await collector.stop();
         break;
     }
   });
 
-  collector.on('end', () => {
+  collector.on("end", () => {
     curPage
       .edit({
         embeds: [

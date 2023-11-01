@@ -1,8 +1,8 @@
 /** @format */
 
-require('module-alias/register');
-const { Collection, Partials, Client } = require('discord.js');
-const { ClusterClient, getInfo } = require('discord-hybrid-sharding');
+require("module-alias/register");
+const { Collection, Partials, Client } = require("discord.js");
+const { ClusterClient, getInfo } = require("discord-hybrid-sharding");
 
 module.exports = class ExtendedClient extends Client {
   constructor() {
@@ -13,7 +13,7 @@ module.exports = class ExtendedClient extends Client {
 
       allowedMentions: {
         repliedUser: false,
-        parse: ['users', 'roles'],
+        parse: ["users", "roles"],
       },
 
       partials: [
@@ -36,40 +36,40 @@ module.exports = class ExtendedClient extends Client {
     this.commands = new Collection();
     this.cooldowns = new Collection();
 
-    this.config = require('../config/options');
+    this.config = require("../config/options");
 
     this.owners = this.config.bot.owners;
     this.admins = this.config.bot.admins;
     this.support = this.config.links.support;
 
-    this.emoji = require('@assets/emoji.js');
+    this.emoji = require("@assets/emoji.js");
 
-    this.button = require('@plugins/button.js');
-    this.logger = require('@plugins/logger.js');
+    this.button = require("@plugins/button.js");
+    this.logger = require("@plugins/logger.js");
 
-    this.premium = require('@db/premium.js');
-    this.vouchers = require('@db/vouchers.js');
-    this.noPrefix = require('@db/noPrefix.js');
-    this.blacklist = require('@db/blacklist.js');
+    this.premium = require("@db/premium.js");
+    this.vouchers = require("@db/vouchers.js");
+    this.noPrefix = require("@db/noPrefix.js");
+    this.blacklist = require("@db/blacklist.js");
 
-    this.formatTime = require('@functions/formatTime.js');
-    this.formatBytes = require('@functions/formatBytes.js');
+    this.formatTime = require("@functions/formatTime.js");
+    this.formatBytes = require("@functions/formatBytes.js");
 
-    this.categories = require('fs').readdirSync('./commands');
+    this.categories = require("fs").readdirSync("./commands");
 
     this.sleep = function (t) {
       return new Promise((r) => setTimeout(r, t));
     };
 
-    this.log = function (message, type = 'log') {
+    this.log = function (message, type = "log") {
       return this.logger.log(
         message,
         type,
-        `${this.user?.username || 'Client'}`,
+        `${this.user?.username || "Client"}`,
       );
     };
 
-    this.connect = async (token, prefix = '%', color, auth, voteUri) => {
+    this.connect = async (token, prefix = "%", color, auth, voteUri) => {
       this.prefix = prefix;
       this.vote = voteUri;
       this.topGgAuth = auth;
@@ -80,7 +80,7 @@ module.exports = class ExtendedClient extends Client {
           } is not provided !!`,
           `error`,
         );
-      this.embed = require('@plugins/embed.js')(color || '#2c2d31');
+      this.embed = require("@plugins/embed.js")(color || "#2c2d31");
       await super.login(token).catch(() => {
         this.log(
           `Client cannot be logged in !!! Valid Token not provided !!`,
@@ -90,18 +90,18 @@ module.exports = class ExtendedClient extends Client {
       });
     };
 
-    this.on('ready', async (client) => {
-      const handler = require('@functions/handleReadyEvent.js')(client);
+    this.on("ready", async (client) => {
+      const handler = require("@functions/handleReadyEvent.js")(client);
 
-      await require('@functions/setStatus.js')(client);
-      await require('@loaders/mongoose.js')(client);
-      await require('@loaders/clientEvents.js')(client);
-      await require('@loaders/customEvents.js')(client);
-      await require('@loaders/commands.js')(client);
+      await require("@functions/setStatus.js")(client);
+      await require("@loaders/mongoose.js")(client);
+      await require("@loaders/clientEvents.js")(client);
+      await require("@loaders/customEvents.js")(client);
+      await require("@loaders/commands.js")(client);
 
       this.log(
         `Ready for ${handler[0]} Servers | ${handler[1]} Users`,
-        'ready',
+        "ready",
       );
     });
   }

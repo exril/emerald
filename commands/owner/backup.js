@@ -1,12 +1,12 @@
 /** @format */
 
 module.exports = {
-  name: 'backup',
+  name: "backup",
   aliases: [],
-  cooldown: '',
-  category: 'owner',
-  usage: '',
-  description: 'sends backup zip to DM',
+  cooldown: "",
+  category: "owner",
+  usage: "",
+  description: "sends backup zip to DM",
   args: false,
   vote: false,
   admin: false,
@@ -14,17 +14,17 @@ module.exports = {
   botPerms: [],
   userPerms: [],
   execute: async (client, message, args) => {
-    const moment = require('moment');
-    const date = moment().format('DD-MM-YYYY_hh-mm-ss');
+    const moment = require("moment");
+    const date = moment().format("DD-MM-YYYY_hh-mm-ss");
 
-    const backup_zip_creator = require('@functions/zipper.js');
+    const backup_zip_creator = require("@functions/zipper.js");
 
     const backup_zip_manager = async (msg) => {
       const file = `./fuego-${args[0] ? `${args[0]}-` : ``}${date}.zip`;
 
       await backup_zip_creator(file);
 
-      const { AttachmentBuilder } = require('discord.js');
+      const { AttachmentBuilder } = require("discord.js");
 
       let m = await msg.channel.send({
         embeds: [
@@ -60,7 +60,7 @@ module.exports = {
             ],
           });
         });
-      const fs = require('fs');
+      const fs = require("fs");
       await fs.unlink(file, () => {
         return;
       });

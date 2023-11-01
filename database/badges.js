@@ -1,6 +1,6 @@
 /** @format */
 
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 let badges = new Schema({
   Client: {
@@ -22,4 +22,4 @@ let badges = new Schema({
     debugger: boolean,
   },
 });
-module.exports = model('badges', badges);
+module.exports = model("badges", badges);

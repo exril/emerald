@@ -1,58 +1,58 @@
 /** @format */
-require('dotenv').config();
-require('./utils/web_server');
-const YML = require('js-yaml').load(
-  require('fs').readFileSync('./config.yml', 'utf8'),
+require("dotenv").config();
+require("./utils/web_server");
+const YML = require("js-yaml").load(
+  require("fs").readFileSync("./config.yml", "utf8"),
 );
-const cron = require('node-cron');
-const { Client } = require('discord.js');
-const { ActivityType } = require('discord.js');
+const cron = require("node-cron");
+const { Client } = require("discord.js");
+const { ActivityType } = require("discord.js");
 const client = new Client({ intents: 3276799 });
-const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 
 const sleep = (t) => {
   return new Promise((r) => setTimeout(r, t));
 };
 
-client.on('ready', async () => {
-  require('./plugins/logger').log(
+client.on("ready", async () => {
+  require("./plugins/logger").log(
     `Ready! Logged in as ${client.user.tag}`,
-    'manager',
+    "manager",
   );
-  client.prefix = '!';
-  client.config = require('./config/options');
+  client.prefix = "!";
+  client.config = require("./config/options");
   client.admins = client.config.bot.admins;
   client.owners = client.config.bot.owners;
   client.support = client.config.links.support;
-  client.emoji = require('./assets/emoji');
-  client.embed = require('./plugins/embed');
-  client.button = require('./plugins/button');
-  client.premium = require('./database/premium');
-  client.vouchers = require('./database/vouchers');
+  client.emoji = require("./assets/emoji");
+  client.embed = require("./plugins/embed");
+  client.button = require("./plugins/button");
+  client.premium = require("./database/premium");
+  client.vouchers = require("./database/vouchers");
   client.user.setPresence({
     activities: [
       {
-        name: 'Executing Backup-Manager.exe',
+        name: "Executing Backup-Manager.exe",
         type: ActivityType.Custom,
       },
     ],
-    status: 'doNotDisturb',
+    status: "doNotDisturb",
   });
 
-  const channel = await client.channels.fetch('1162104949061210153');
+  const channel = await client.channels.fetch("1162104949061210153");
   const messages = await channel.messages.fetch({ limit: 10 });
   const toDel = messages.filter((msg) => msg.author.id === client.user.id);
   await toDel.forEach(async (m) => await m.delete());
-  await channel.send('Backup Manager Started');
+  await channel.send("Backup Manager Started");
 
-  cron.schedule('0 */1 * * *', async () => {
-    const backup_zip_creator = require('./functions/zipper.js');
+  cron.schedule("0 */1 * * *", async () => {
+    const backup_zip_creator = require("./functions/zipper.js");
 
     const backup_zip_manager = async () => {
       const file = `./fuego-backup.zip`;
       await backup_zip_creator(file);
       await sleep(10000);
-      const { AttachmentBuilder } = require('discord.js');
+      const { AttachmentBuilder } = require("discord.js");
       await channel
         .send({
           files: [
@@ -62,13 +62,16 @@ client.on('ready', async () => {
           ],
         })
         .then(async (msg) => {
-          const fs = require('fs');
+          const fs = require("fs");
           fs.unlink(file, () => {
             return;
           });
-          setTimeout(async () => {
-            await msg.delete();
-          }, 5 * 60 * 1000);
+          setTimeout(
+            async () => {
+              await msg.delete();
+            },
+            5 * 60 * 1000,
+          );
         });
     };
 
@@ -76,7 +79,7 @@ client.on('ready', async () => {
   });
 });
 
-client.on('messageCreate', async (message) => {
+client.on("messageCreate", async (message) => {
   if (
     !message ||
     !message.author ||
@@ -86,13 +89,13 @@ client.on('messageCreate', async (message) => {
   )
     return;
 
-  await new (require('dokdo'))(client, {
-    owners: ['692617937512562729'],
-    aliases: ['jsk', 'Jsk'],
+  await new (require("dokdo"))(client, {
+    owners: ["692617937512562729"],
+    aliases: ["jsk", "Jsk"],
     prefix: client.prefix,
   }).run(message);
 
-  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const prefixRegex = new RegExp(
     `^(<@!?${client.user.id}>|${escapeRegex(client.prefix)})\\s*`,
   );
@@ -102,18 +105,18 @@ client.on('messageCreate', async (message) => {
   const cmd = args.shift().toLowerCase();
 
   if (
-    cmd == 'gen' &&
+    cmd == "gen" &&
     (client.admins.includes(message.author.id) ||
       client.owners.includes(message.author.id))
   ) {
-    var voucher_codes = require('voucher-code-generator');
+    var voucher_codes = require("voucher-code-generator");
 
     let code = await voucher_codes.generate({
-      pattern: 'F##U-E##G-O##B-Y##1-S##T',
+      pattern: "F##U-E##G-O##B-Y##1-S##T",
     });
     code = code[0].toUpperCase();
 
-    await client.vouchers.set(code, 'unused');
+    await client.vouchers.set(code, "unused");
 
     if (message?.mentions?.members?.first()) {
       message?.mentions?.members?.first().send({
@@ -146,7 +149,7 @@ client.on('messageCreate', async (message) => {
     });
   }
 
-  if (cmd == 'redeem') {
+  if (cmd == "redeem") {
     let valid = await client.vouchers.get(args[0]);
 
     if (!valid)
@@ -157,21 +160,21 @@ client.on('messageCreate', async (message) => {
           ),
         ],
       });
-    if (valid == 'unused') {
+    if (valid == "unused") {
       const menu = new StringSelectMenuBuilder()
-        .setCustomId('menu')
-        .setPlaceholder('Select Bot To Activate Premium In . . .')
+        .setCustomId("menu")
+        .setPlaceholder("Select Bot To Activate Premium In . . .")
         .setMinValues(1)
         .setMaxValues(1)
         .addOptions([
           {
-            label: 'Fuego',
-            value: '1050423676689985606',
+            label: "Fuego",
+            value: "1050423676689985606",
             emoji: `${client.emoji.a_}`,
           },
           {
-            label: 'Fuego Prime',
-            value: '1087627654888443925',
+            label: "Fuego Prime",
+            value: "1087627654888443925",
             emoji: `${client.emoji.b_}`,
           },
         ]);
@@ -179,7 +182,7 @@ client.on('messageCreate', async (message) => {
       await client.vouchers.delete(args[0]);
       const m = await message.channel.send({
         //embeds: [embed],
-        content: 'Premium lelo guyz. . .',
+        content: "Premium lelo guyz. . .",
         components: [row],
       });
       const collector = m?.createMessageComponentCollector({
@@ -188,7 +191,7 @@ client.on('messageCreate', async (message) => {
         idle: 30000 / 2,
       });
 
-      collector.on('collect', async (interaction) => {
+      collector.on("collect", async (interaction) => {
         if (!interaction.deferred) await interaction.deferUpdate();
         await client.premium.set(
           `${interaction.values}_${message.author.id}`,
@@ -224,7 +227,7 @@ client.on('messageCreate', async (message) => {
           .catch(() => {});
       });
 
-      collector.on('end', async () => {
+      collector.on("end", async () => {
         return m
           .edit({
             embeds: [
@@ -235,11 +238,11 @@ client.on('messageCreate', async (message) => {
             components: [],
           })
           .then(async () => {
-            await client.vouchers.set(args[0], 'unused').catch((e) => {});
+            await client.vouchers.set(args[0], "unused").catch((e) => {});
           });
       });
     }
   }
 });
-require('./utils/error_handler')(client);
+require("./utils/error_handler")(client);
 client.login(YML.MANAGER.TOKEN);

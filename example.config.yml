@@ -5,19 +5,19 @@ BOT:
   ADMINS: []
 
 LINKS:
-  SUPPORT: ''
-  MONGO_URI: ''
+  SUPPORT: ""
+  MONGO_URI: ""
 
 CLIENT:
-  PREFIX: '%'
-  COLOR: ''
+  PREFIX: "%"
+  COLOR: ""
   SHARDS: 1 #value must be 'auto' or <integer>
   PER_CLUSTER: 2 #value must be <integer>
-  TOKEN: ''
-  TOPGGAUTH: ''
-  VOTEURI: ''
+  TOKEN: ""
+  TOPGGAUTH: ""
+  VOTEURI: ""
 
 MANAGER:
-  PREFIX: ''
-  COLOR: ''
-  TOKEN: ''
+  PREFIX: ""
+  COLOR: ""
+  TOKEN: ""

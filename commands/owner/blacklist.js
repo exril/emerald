@@ -1,14 +1,14 @@
 /** @format */
 
-const pagination = require('@functions/pagination.js');
+const pagination = require("@functions/pagination.js");
 
 module.exports = {
-  name: 'blacklist',
-  aliases: ['bl'],
-  cooldown: '',
-  category: 'owner',
-  usage: '<add/del> <mention>',
-  description: 'Add/remove to/from blacklist',
+  name: "blacklist",
+  aliases: ["bl"],
+  cooldown: "",
+  category: "owner",
+  usage: "<add/del> <mention>",
+  description: "Add/remove to/from blacklist",
   args: false,
   vote: false,
   admin: true,
@@ -21,7 +21,7 @@ module.exports = {
     let valid = (await client.users.fetch(id).catch(() => {})) || null;
     const exist = await client.blacklist.get(`${id}`);
 
-    if (!valid && !args[1] == 'list')
+    if (!valid && !args[1] == "list")
       return message.channel.send({
         embeds: [
           new client.embed().desc(`${client.emoji.no} **Invalid User**`),
@@ -29,7 +29,7 @@ module.exports = {
       });
 
     switch (args[0].toLowerCase()) {
-      case 'add':
+      case "add":
         {
           if (exist)
             return message.channel.send({
@@ -51,10 +51,10 @@ module.exports = {
         }
         break;
 
-      case 'rem':
-      case 'del':
-      case 'remove':
-      case 'delete':
+      case "rem":
+      case "del":
+      case "remove":
+      case "delete":
         {
           if (!exist)
             return message.channel.send({
@@ -75,7 +75,7 @@ module.exports = {
           });
         }
         break;
-      case 'list':
+      case "list":
         let ids = await client.blacklist.keys;
         //ids = [...ids];
         if (!ids.length)
@@ -93,8 +93,8 @@ module.exports = {
             `**• [${user.username}](https://discord.com/users/${user.id}) [${user.id}]**`,
           );
         }
-        const mapping = require('lodash').chunk(names, 10);
-        const descriptions = mapping.map((s) => s.join('\n'));
+        const mapping = require("lodash").chunk(names, 10);
+        const descriptions = mapping.map((s) => s.join("\n"));
         var pages = [];
         for (let i = 0; i < descriptions.length; i++) {
           const embed = new client.embed()

@@ -1,14 +1,14 @@
 /** @format */
 
-const { AttachmentBuilder } = require('discord.js');
-const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+const { AttachmentBuilder } = require("discord.js");
+const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
 
 module.exports = {
-  name: 'ping',
-  aliases: ['pong'],
-  cooldown: '',
-  category: 'information',
-  usage: '',
+  name: "ping",
+  aliases: ["pong"],
+  cooldown: "",
+  category: "information",
+  usage: "",
   description: "Shows bot's ping",
   args: false,
   vote: false,
@@ -23,7 +23,7 @@ module.exports = {
 
     const width = 800;
     const height = 250;
-    const backgroundColour = 'white';
+    const backgroundColour = "white";
     const chartJSNodeCanvas = new ChartJSNodeCanvas({
       width,
       height,
@@ -39,23 +39,23 @@ module.exports = {
     await message.channel.send({ embeds: [emb] }).then(async (m) => {
       let josh = async () => {
         const start = Date.now();
-        await client.noPrefix.set('test', true);
+        await client.noPrefix.set("test", true);
         const write = Date.now();
-        await client.noPrefix.get('test');
+        await client.noPrefix.get("test");
         const read = Date.now();
-        await client.noPrefix.delete('test');
+        await client.noPrefix.delete("test");
         const del = Date.now();
         return [del - start, write - start, read - write, del - read];
       };
       var msg = m.createdAt - message.createdAt;
       var ws = client.ws.ping;
       const configuration = {
-        type: 'line',
+        type: "line",
         data: {
-          labels: ['ㅤ', 'ㅤ', 'ㅤ', 'ㅤ', 'ㅤ', 'ㅤ', 'ㅤ'],
+          labels: ["ㅤ", "ㅤ", "ㅤ", "ㅤ", "ㅤ", "ㅤ", "ㅤ"],
           datasets: [
             {
-              label: 'ws',
+              label: "ws",
               data: [
                 gen(ws),
                 gen(ws),
@@ -66,11 +66,11 @@ module.exports = {
                 ws / 10,
               ],
               fill: true,
-              borderColor: 'rgb(51, 204, 204)',
+              borderColor: "rgb(51, 204, 204)",
               borderWidth: 1,
             },
             {
-              label: 'message',
+              label: "message",
               data: [
                 gen(msg),
                 gen(msg),
@@ -81,7 +81,7 @@ module.exports = {
                 msg / 10,
               ],
               fill: true,
-              borderColor: 'rgb(200, 50, 204)',
+              borderColor: "rgb(200, 50, 204)",
               borderWidth: 1,
             },
           ],
@@ -96,7 +96,7 @@ module.exports = {
       };
 
       const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-      const attachment = new AttachmentBuilder(image, { name: 'chart.png' });
+      const attachment = new AttachmentBuilder(image, { name: "chart.png" });
       const dbData = await josh();
       const PingEmbed = new client.embed()
         .desc(
@@ -109,7 +109,7 @@ module.exports = {
         )
         .thumb(client.user.displayAvatarURL())
         .img(`attachment://${attachment.name}`)
-        .setFooter({ text: 'By ━● 1sT-Services | Fast as Fuck boi' });
+        .setFooter({ text: "By ━● 1sT-Services | Fast as Fuck boi" });
       await m
         .edit({ embeds: [PingEmbed], files: [attachment] })
         .catch(() => {});

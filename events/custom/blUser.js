@@ -1,12 +1,12 @@
 /** @format */
 
-const { ActionRowBuilder } = require('discord.js');
+const { ActionRowBuilder } = require("discord.js");
 
 module.exports = {
-  name: 'blUser',
+  name: "blUser",
   run: async (client, message, blacklistUser) => {
-    if (blacklistUser != 'warned') {
-      await client.blacklist.set(`${message.author.id}`, 'warned');
+    if (blacklistUser != "warned") {
+      await client.blacklist.set(`${message.author.id}`, "warned");
       return message.reply({
         embeds: [
           new client.embed().desc(
@@ -17,7 +17,7 @@ module.exports = {
         components: [
           new ActionRowBuilder().addComponents(
             new client.button()
-              .link('Click to join Support Server', client.support)
+              .link("Click to join Support Server", client.support)
               .setEmoji(client.emoji.support),
           ),
         ],

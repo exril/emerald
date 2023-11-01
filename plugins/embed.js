@@ -1,6 +1,6 @@
 /** @format */
 
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = (color) => {
   class embed extends EmbedBuilder {

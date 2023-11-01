@@ -1,12 +1,12 @@
 /** @format */
-const JOSH = require('@joshdb/core');
-const JSON = require('@joshdb/json');
+const JOSH = require("@joshdb/core");
+const JSON = require("@joshdb/json");
 
 module.exports = new JOSH({
-  name: 'vouchers',
+  name: "vouchers",
   provider: JSON,
   providerOptions: {
     cleanupEmpty: true,
-    dataDir: './josh-data/vouchers',
+    dataDir: "./josh-data/vouchers",
   },
 });

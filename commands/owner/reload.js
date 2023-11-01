@@ -1,12 +1,12 @@
 /** @format */
 
 module.exports = {
-  name: 'reload',
-  aliases: ['rl'],
-  cooldown: '',
-  category: 'owner',
-  usage: '<command_name>',
-  description: 'Reloades given command',
+  name: "reload",
+  aliases: ["rl"],
+  cooldown: "",
+  category: "owner",
+  usage: "<command_name>",
+  description: "Reloades given command",
   args: false,
   vote: false,
   admin: false,
@@ -18,7 +18,7 @@ module.exports = {
 
     const commandName = args[0].toLowerCase();
     const commands =
-      commandName == 'all'
+      commandName == "all"
         ? [...client.commands].map((entry) => entry[1])
         : [
             message.client.commands.get(commandName) ||
@@ -65,10 +65,10 @@ module.exports = {
           `${
             client.emoji.yes
           } **| Successfully reloaded \n\`\`\`\n${success.join(
-            ', ',
+            ", ",
           )}\n\`\`\`**\n` +
             `${client.emoji.no} **| Reload Failed \n\`\`\`\n${
-              failed.join(',\n') || 'None'
+              failed.join(",\n") || "None"
             }\n\`\`\`**`,
         ),
       ],

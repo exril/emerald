@@ -1,13 +1,13 @@
 /** @format */
 
-const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 
 module.exports = {
-  name: 'help',
-  aliases: ['h'],
-  cooldown: '',
-  category: 'information',
-  usage: '',
+  name: "help",
+  aliases: ["h"],
+  cooldown: "",
+  category: "information",
+  usage: "",
   description: "Shows bot's help menu",
   args: false,
   vote: false,
@@ -22,13 +22,13 @@ module.exports = {
         .map(
           (x) =>
             `${client.emoji.point} **\`${x.name}\` → [${
-              x.description || 'No description'
-            }](${client.support})** ${x.new ? `${client.emoji.new}` : ''}${
-              x.vote ? `${client.emoji.premium}` : ''
+              x.description || "No description"
+            }](${client.support})** ${x.new ? `${client.emoji.new}` : ""}${
+              x.vote ? `${client.emoji.premium}` : ""
             }`,
         )
-        .join('\n');
-      return commands || '**No commands to display**';
+        .join("\n");
+      return commands || "**No commands to display**";
     };
 
     if (args[0]) {
@@ -62,10 +62,10 @@ module.exports = {
             new client.embed()
               .desc(
                 ` **${client.emoji.point} Nameㅤ →ㅤ${cmd.name} ${
-                  cmd.aliases?.[0] ? `, ${cmd.aliases.join(', ')}` : ''
+                  cmd.aliases?.[0] ? `, ${cmd.aliases.join(", ")}` : ""
                 }\n` +
                   `${client.emoji.point} Infoㅤㅤ→ㅤ${
-                    cmd.description || 'Not Available'
+                    cmd.description || "Not Available"
                   }\n` +
                   `${client.emoji.point} Usageㅤ→ㅤ[${client.prefix}${cmd.name} ${cmd.usage}](${client.support})\n**`,
               )
@@ -99,7 +99,7 @@ module.exports = {
       .setFooter({
         text: `Page [1/5] By ━● 1sT-Services`,
         iconURL:
-          'https://media.discordapp.net/attachments/1145600285553741884/1145600466068185088/3061501b2e6bdcc1762deeb76218addc.webp',
+          "https://media.discordapp.net/attachments/1145600285553741884/1145600466068185088/3061501b2e6bdcc1762deeb76218addc.webp",
       });
 
     const cmds = async (cat) => {
@@ -109,7 +109,7 @@ module.exports = {
         })
       )
         .map((c) => `\`${c.name}\``)
-        .join(', ');
+        .join(", ");
     };
 
     let arr = [];
@@ -120,31 +120,31 @@ module.exports = {
     let allCmds = await client.categories.map(
       (cat, i) =>
         `${client.emoji.point} **[${cat}](${client.support})\n ${arr[i].join(
-          ',',
+          ",",
         )}**`,
     );
-    desc = allCmds.join('\n\n');
+    desc = allCmds.join("\n\n");
 
     const all = new client.embed().desc(desc).setFooter({
       text: `Page [5/5] By ━● 1sT-Services`,
     });
 
     let menu = new StringSelectMenuBuilder()
-      .setCustomId('helpop')
+      .setCustomId("helpop")
       .setMinValues(1)
       .setMaxValues(1)
-      .setPlaceholder('Select category to view commands')
+      .setPlaceholder("Select category to view commands")
       .addOptions([
         {
-          label: 'Home',
-          value: 'home',
+          label: "Home",
+          value: "home",
           emoji: `${client.emoji.arrow}`,
         },
       ]);
     const selectMenu = new ActionRowBuilder().addComponents(menu);
 
     client.categories.forEach((category) => {
-      if (category !== 'owner') {
+      if (category !== "owner") {
         menu.addOptions({
           label: category.charAt(0).toUpperCase() + category.slice(1),
           value: category,
@@ -155,8 +155,8 @@ module.exports = {
 
     menu.addOptions([
       {
-        label: 'All commands',
-        value: 'all',
+        label: "All commands",
+        value: "all",
         emoji: `${client.emoji.arrow}`,
       },
     ]);
@@ -172,12 +172,12 @@ module.exports = {
       idle: 60000 / 2,
     });
 
-    collector.on('collect', async (interaction) => {
+    collector.on("collect", async (interaction) => {
       if (!interaction.deferred) await interaction.deferUpdate();
 
       const category = interaction.values[0];
       switch (category) {
-        case 'home':
+        case "home":
           await m
             .edit({
               embeds: [embed],
@@ -185,7 +185,7 @@ module.exports = {
             .catch(() => {});
           break;
 
-        case 'all':
+        case "all":
           await m
             .edit({
               embeds: [all],
@@ -221,7 +221,7 @@ module.exports = {
       }
     });
 
-    collector.on('end', async () => {
+    collector.on("end", async () => {
       if (!m) return;
       await m.edit({ components: [] }).catch(() => {});
     });

@@ -1,12 +1,12 @@
 /** @format */
 
 module.exports = {
-  name: '',
-  aliases: [''],
-  cooldown: '',
-  category: 'information',
-  usage: '',
-  description: '',
+  name: "",
+  aliases: [""],
+  cooldown: "",
+  category: "information",
+  usage: "",
+  description: "",
   args: false,
   vote: false,
   admin: false,

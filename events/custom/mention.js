@@ -1,7 +1,7 @@
 /** @format */
 
 module.exports = {
-  name: 'mention',
+  name: "mention",
   run: async (client, message) => {
     const embed = new client.embed()
       .thumb(client.user.displayAvatarURL())

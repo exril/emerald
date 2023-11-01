@@ -1,11 +1,11 @@
 /** @format */
 
 module.exports = {
-  name: 'stats',
-  aliases: ['shard', 'status', 'stat'],
-  cooldown: '',
-  category: 'information',
-  usage: '',
+  name: "stats",
+  aliases: ["shard", "status", "stat"],
+  cooldown: "",
+  category: "information",
+  usage: "",
   description: "Shows bot's shard stats",
   args: false,
   vote: false,
@@ -35,10 +35,10 @@ module.exports = {
     let msg = await message.reply({ embeds: [e] });
 
     let v = await client.cluster.broadcastEval(async (x) => {
-      let cpu = '[ N/A ]';
+      let cpu = "[ N/A ]";
 
       await new Promise(async (res, reject) => {
-        await require('os-utils').cpuUsage((v) => {
+        await require("os-utils").cpuUsage((v) => {
           res(v);
         });
       }).then((value) => {

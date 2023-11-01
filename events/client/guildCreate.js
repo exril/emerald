@@ -1,10 +1,10 @@
 /** @format */
 
 module.exports = {
-  name: 'guildCreate',
+  name: "guildCreate",
   run: async (client, guild) => {
     if (!guild.name) return;
-    const { ActionRowBuilder } = require('discord.js');
+    const { ActionRowBuilder } = require("discord.js");
     let desc =
       `${
         client.emoji.cloud +
