@@ -18,7 +18,7 @@ module.exports = {
   userPerms: [],
   execute: async (client, message, args) => {
     let emb = new client.embed().desc(
-      `${client.emoji.cool} **| Getting data. Please wait . . .**`,
+      `${client.emoji.cool} **| Getting data. Please wait . . .**`
     );
 
     const width = 800;
@@ -30,11 +30,12 @@ module.exports = {
       backgroundColour,
     });
 
-    const gen = (value) =>
-      (value +
-        Math.floor(Math.random() * (value * 0.25 - value * 0.15)) +
-        value * 0.15) /
-      10;
+    const gen = (ws, msg) => {
+      let rnd = Math.random();
+      ws = ws + Math.floor(rnd * (-ws * 0.1 - ws * 0.1)) + ws * 0.15;
+      msg = msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.15;
+      return [ws, msg];
+    };
 
     await message.channel.send({ embeds: [emb] }).then(async (m) => {
       let josh = async () => {
@@ -47,8 +48,14 @@ module.exports = {
         const del = Date.now();
         return [del - start, write - start, read - write, del - read];
       };
-      var msg = m.createdAt - message.createdAt;
-      var ws = client.ws.ping;
+      const ws = client.ws.ping;
+      const msg = m.createdAt - message.createdAt;
+
+      let data = [];
+      for (i = 0; i < 6; i++) {
+        data.push(gen(ws, msg));
+      }
+      data.push([ws, msg]);
       const configuration = {
         type: "line",
         data: {
@@ -57,31 +64,41 @@ module.exports = {
             {
               label: "ws",
               data: [
-                gen(ws),
-                gen(ws),
-                gen(ws),
-                gen(ws),
-                gen(ws),
-                gen(ws),
-                ws / 10,
+                data[0][0],
+                data[1][0],
+                data[2][0],
+                data[3][0],
+                data[4][0],
+                data[5][0],
+                data[6][0],
               ],
               fill: true,
-              borderColor: "rgb(51, 204, 204)",
+              borderColor:
+                ws > 100
+                  ? ws < 150
+                    ? "rgb(250, 200, 0)"
+                    : "rgb(250, 50, 0)"
+                  : "rgb(50, 250, 0)",
               borderWidth: 1,
             },
             {
               label: "message",
               data: [
-                gen(msg),
-                gen(msg),
-                gen(msg),
-                gen(msg),
-                gen(msg),
-                gen(msg),
-                msg / 10,
+                data[0][1],
+                data[1][1],
+                data[2][1],
+                data[3][1],
+                data[4][1],
+                data[5][1],
+                data[6][1],
               ],
               fill: true,
-              borderColor: "rgb(200, 50, 204)",
+              borderColor:
+                msg > 250
+                  ? msg < 350
+                    ? "rgb(250, 200, 0)"
+                    : "rgb(250, 50, 0)"
+                  : "rgb(50, 250, 0)",
               borderWidth: 1,
             },
           ],
@@ -105,7 +122,7 @@ module.exports = {
             `${client.emoji.json} -  **DB Deleteㅤ : **\`${dbData[3]} ms\`\n` +
             `${client.emoji.json} - **DB Totalㅤ : **\`${dbData[0]} ms\`\n` +
             `${client.emoji.cloud} - **WS Latencyㅤ: **\`${ws} ms\`\n` +
-            `${client.emoji.message} - **MSG Latency : **\`${msg} ms\`\n`,
+            `${client.emoji.message} - **MSG Latency : **\`${msg} ms\`\n`
         )
         .thumb(client.user.displayAvatarURL())
         .img(`attachment://${attachment.name}`)

@@ -1,7 +1,7 @@
 /** @format */
 
 const { RateLimitManager } = require("@sapphire/ratelimits");
-const rateLimitManager = new RateLimitManager(60000, 12);
+const rateLimitManager = new RateLimitManager(10000, 4);
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -54,7 +54,7 @@ module.exports = {
 
     const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const prefixRegex = new RegExp(
-      `^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`,
+      `^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`
     );
     if (!prefixRegex.test(message.content.toLowerCase())) return;
     const [matchedPrefix] = message.content.toLowerCase().match(prefixRegex);
@@ -64,7 +64,7 @@ module.exports = {
     const command =
       client.commands.get(commandName) ||
       client.commands.find(
-        (cmd) => cmd.aliases && cmd.aliases.includes(commandName),
+        (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
       );
 
     if (!command) return;
@@ -76,9 +76,15 @@ module.exports = {
     if (!client.cooldowns.has(command.name)) {
       client.cooldowns.set(
         command.name,
-        new (require("discord.js").Collection)(),
+        new (require("discord.js").Collection)()
       );
     }
+    const bucket = rateLimitManager.acquire(`${message.author.id}`);
+
+    if (bucket.limited)
+      return client.blacklist.set(`${message.author.id}`, true);
+
+    bucket.consume();
 
     const now = Date.now();
     const timestamps = client.cooldowns.get(command.name);
@@ -100,20 +106,13 @@ module.exports = {
             async (m) =>
               await setTimeout(async () => {
                 m.delete().catch(() => {});
-              }, 3000),
+              }, 3000)
           );
       }
     }
 
     timestamps.set(message.author.id, now);
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-
-    const bucket = rateLimitManager.acquire(`${message.author.id}`);
-
-    if (bucket.limited)
-      return client.blacklist.set(`${message.author.id}`, true);
-
-    bucket.consume();
 
     if (
       !message.channel
@@ -131,7 +130,7 @@ module.exports = {
         .send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.warn} **I need \`SEND_MESSAGES\` permission in ${message.channel} to execute the command \`${command.name}\`**`,
+              `${client.emoji.warn} **I need \`SEND_MESSAGES\` permission in ${message.channel} to execute the command \`${command.name}\`**`
             ),
           ],
         })
@@ -146,7 +145,7 @@ module.exports = {
         .send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.warn} **I need \`EMBED_LINKS\` permission in ${message.channel} to execute the command \`${command.name}\`**`,
+              `${client.emoji.warn} **I need \`EMBED_LINKS\` permission in ${message.channel} to execute the command \`${command.name}\`**`
             ),
           ],
         })
@@ -171,8 +170,8 @@ module.exports = {
     ) {
       embed.desc(
         `${client.emoji.warn} **You need \`${command.userPerms.join(
-          ", ",
-        )}\` permission/s to use this command**`,
+          ", "
+        )}\` permission/s to use this command**`
       );
       return message.channel.send({ embeds: [embed] });
     }
@@ -186,7 +185,7 @@ module.exports = {
       embed.desc(
         `${client.emoji.warn} **I need \`${command.userPerms.join(", ")}\` in ${
           message.channel
-        } permission/s to execute this command**`,
+        } permission/s to execute this command**`
       );
       return message.channel.send({ embeds: [embed] });
     }
@@ -196,7 +195,7 @@ module.exports = {
         return message.channel.send({
           embeds: [
             embed.desc(
-              `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`,
+              `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`
             ),
           ],
         });
@@ -207,7 +206,7 @@ module.exports = {
         return message.channel.send({
           embeds: [
             embed.desc(
-              `${client.emoji.king} **Only my Owner/s can use this command**`,
+              `${client.emoji.king} **Only my Owner/s can use this command**`
             ),
           ],
         });
@@ -222,7 +221,7 @@ module.exports = {
             headers: {
               Authorization: client.topGgAuth,
             },
-          },
+          }
         )
           .then((res) => res.json())
           .then((json) => {
@@ -237,7 +236,7 @@ module.exports = {
             embeds: [
               embed.desc(
                 `${client.emoji.premium} **Only my Voter/s can use this command**\n` +
-                  `[Click to vote me](${client.vote})`,
+                  `[Click to vote me](${client.vote})`
               ),
             ],
           });
