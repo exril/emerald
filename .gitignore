@@ -60,3 +60,4 @@ dist
 .pnp.*
 .webpack/
 .svelte-kit
+config.yml

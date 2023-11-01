@@ -1,4 +1,5 @@
 /** @format */
+const { RateLimitManager } = require('@sapphire/ratelimits');
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -103,6 +104,17 @@ module.exports = {
 
     timestamps.set(message.author.id, now);
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
+    // Implement @sapphire/ratelimits
+
+    let timeOutMsgCount = client.config.antiAbuseBot.timeOutMsgCount
+    let timeBetweenEachCmd = client.config.antiAbuseBot.timeBetweenEachCmd;
+
+    const ratelimit = new RateLimitManager(timeBetweenEachCmd, timeOutMsgCount);
+
+    if (ratelimit.limited) client.blacklist.set(`${message.author.id}`, "warned")
+
+    ratelimit.consume();
 
     if (
       !message.channel

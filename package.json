@@ -7,6 +7,7 @@
   "main": "launcher.js",
   "scripts": {
     "start": "node launcher.js",
+    "dev": "nodemon --ignore josh-data/ launcher.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "_moduleAliases": {
@@ -17,6 +18,11 @@
     "@loaders": "./loaders",
     "@plugins": "./plugins",
     "@functions": "./functions"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "josh-data/*"
+    ]
   },
   "dependencies": {
     "@joshdb/core": "^1.2.7",
@@ -39,6 +45,7 @@
     "mongoose": "^7.4.3",
     "ms": "^2.1.3",
     "node-cron": "^3.0.0",
+    "nodemon": "^3.0.1",
     "os-utils": "^0.0.14",
     "voucher-code-generator": "^1.3.0"
   }

@@ -21,3 +21,8 @@ MANAGER:
   PREFIX: ""
   COLOR: ""
   TOKEN: ""
+
+ANTIABUSEBOT: {
+  timeOutMsgCount: 10,
+  timeBetweenEachCmd: 60000 #ms
+}
