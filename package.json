@@ -20,7 +20,9 @@
     "@functions": "./functions"
   },
   "nodemonConfig": {
-    "ignore": ["josh-data/*"]
+    "ignore": [
+      "josh-data/*"
+    ]
   },
   "dependencies": {
     "@joshdb/core": "^1.2.7",

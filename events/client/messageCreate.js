@@ -1,4 +1,5 @@
 /** @format */
+const { RateLimitManager } = require('@sapphire/ratelimits');
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -104,37 +105,16 @@ module.exports = {
     timestamps.set(message.author.id, now);
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
-    // ------------------ Anti abuse logic start [RainyXeon] ------------------
-    let timeoutCount = null
+    // Implement @sapphire/ratelimits
+
     let timeOutMsgCount = client.config.antiAbuseBot.timeOutMsgCount
-    let timeBetweenEachCmd = client.config.antiAbuseBot.timeBetweenEachCmd; //Bot will only respond once a minute.
+    let timeBetweenEachCmd = client.config.antiAbuseBot.timeBetweenEachCmd;
 
-    const getUserLastedMessage = client.timeout.get(message.author.id)
+    const ratelimit = new RateLimitManager(timeBetweenEachCmd, timeOutMsgCount);
 
-    if (getUserLastedMessage) {
-      if (!(message.createdTimestamp - getUserLastedMessage < timeBetweenEachCmd)) client.timeout.delete(message.author.id)
-      else {
-        client.timeout.set(message.author.id, message.createdTimestamp)
+    if (ratelimit.limited) client.blacklist.set(`${message.author.id}`, "warned")
 
-        let countData = client.timeoutCount.get(message.author.id)
-
-        if (countData >= timeOutMsgCount) {
-          client.blacklist.set(`${message.author.id}`, "warned")
-        } else {
-          client.timeoutCount.set(message.author.id, countData ? countData + 1 : 1)
-        }
-
-        timeoutCount ? timeoutCount = setTimeout(() => {
-          client.timeoutCount.delete(message.author.id)
-          client.timeout.delete(message.author.id)
-          clearTimeout(timeoutCount)
-        }, 5 * 60 * 1000) : null
-
-      }
-    } else {
-      client.timeout.set(message.author.id, message.createdTimestamp)
-    }
-    // ------------------ Anti abuse logic end ------------------
+    ratelimit.consume();
 
     if (
       !message.channel
