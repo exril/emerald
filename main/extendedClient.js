@@ -35,6 +35,8 @@ module.exports = class ExtendedClient extends Client {
     this.aliases = new Collection();
     this.commands = new Collection();
     this.cooldowns = new Collection();
+    this.timeout = new Collection();
+    this.timeoutCount = new Collection();
 
     this.config = require("../config/options");
 
