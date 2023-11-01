@@ -110,7 +110,9 @@ module.exports = {
     let timeOutMsgCount = client.config.antiAbuseBot.timeOutMsgCount
     let timeBetweenEachCmd = client.config.antiAbuseBot.timeBetweenEachCmd;
 
-    const ratelimit = new RateLimitManager(timeBetweenEachCmd, timeOutMsgCount);
+    const rateLimitManager = new RateLimitManager(timeBetweenEachCmd, timeOutMsgCount);
+
+    const ratelimit = rateLimitManager.acquire(message.author.id);
 
     if (ratelimit.limited) client.blacklist.set(`${message.author.id}`, "warned")
 
