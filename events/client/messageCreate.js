@@ -43,6 +43,10 @@ module.exports = {
     if (message.content.match(mention)) {
       if (blacklistUser)
         return await client.emit("blUser", message, blacklistUser);
+      const mentionRlBucket = rateLimitManager.acquire(`${message.author.id}`);
+      if (mentionRlBucket.limited)
+        return client.blacklist.set(`${message.author.id}`, true);
+      mentionRlBucket.consume();
       return await client.emit("mention", message);
     }
 
@@ -73,18 +77,19 @@ module.exports = {
       return await client.emit("blUser", message, blacklistUser);
     }
 
+    const commandRlBucket = rateLimitManager.acquire(`${message.author.id}`);
+
+    if (commandRlBucket.limited)
+      return client.blacklist.set(`${message.author.id}`, true);
+
+    commandRlBucket.consume();
+
     if (!client.cooldowns.has(command.name)) {
       client.cooldowns.set(
         command.name,
         new (require("discord.js").Collection)()
       );
     }
-    const bucket = rateLimitManager.acquire(`${message.author.id}`);
-
-    if (bucket.limited)
-      return client.blacklist.set(`${message.author.id}`, true);
-
-    bucket.consume();
 
     const now = Date.now();
     const timestamps = client.cooldowns.get(command.name);
