@@ -109,18 +109,6 @@ module.exports = {
     let timeOutMsgCount = client.config.antiAbuseBot.timeOutMsgCount
     let timeBetweenEachCmd = client.config.antiAbuseBot.timeBetweenEachCmd; //Bot will only respond once a minute.
 
-    if (client.blacklist.get(message.author.id)) {
-      return await message.author
-      .send({
-        embeds: [
-          new client.embed().desc(
-            `You banned`,
-          ),
-        ],
-      })
-      .catch(() => {});
-    }
-
     const getUserLastedMessage = client.timeout.get(message.author.id)
 
     if (getUserLastedMessage) {
