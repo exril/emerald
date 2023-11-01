@@ -21,8 +21,9 @@
   "dependencies": {
     "@joshdb/core": "^1.2.7",
     "@joshdb/json": "^1.0.5",
+    "@sapphire/ratelimits": "^2.4.7",
     "chalk": "4.1.2",
-    "chartjs": "^0.3.24",
+    "chart.js": "^3.5.1",
     "chartjs-node-canvas": "^4.1.6",
     "dir-archiver": "^2.1.0",
     "discord-hybrid-sharding": "^2.1.3",
