@@ -15,9 +15,4 @@ module.exports = {
     support: YML.LINKS.SUPPORT || "https://discord.gg/uY5BXAfd",
     mongoURI: YML.LINKS.MONGO_URI,
   },
-
-  antiAbuseBot: {
-    timeOutMsgCount: YML.ANTIABUSEBOT.timeOutMsgCount || 20,
-    timeBetweenEachCmd: YML.ANTIABUSEBOT.timeBetweenEachCmd || 60000 * 2 //Bot will only respond once a minute.
-  }
 };

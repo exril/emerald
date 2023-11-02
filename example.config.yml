@@ -23,6 +23,6 @@ MANAGER:
   TOKEN: ""
 
 ANTIABUSEBOT: {
-  timeOutMsgCount: 10,
-  timeBetweenEachCmd: 60000 #ms
-}
+    timeOutMsgCount: 10,
+    timeBetweenEachCmd: 60000, #ms
+  }
