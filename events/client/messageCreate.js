@@ -44,9 +44,11 @@ module.exports = {
       if (blacklistUser)
         return await client.emit("blUser", message, blacklistUser);
       const mentionRlBucket = rateLimitManager.acquire(`${message.author.id}`);
-      if (mentionRlBucket.limited)
+      if (mentionRlBucket.limited && !developer && !admin)
         return client.blacklist.set(`${message.author.id}`, true);
-      mentionRlBucket.consume();
+      try {
+        mentionRlBucket.consume();
+      } catch (e) {}
       return await client.emit("mention", message);
     }
 
@@ -79,10 +81,12 @@ module.exports = {
 
     const commandRlBucket = rateLimitManager.acquire(`${message.author.id}`);
 
-    if (commandRlBucket.limited)
+    if (commandRlBucket.limited && !developer && !admin)
       return client.blacklist.set(`${message.author.id}`, true);
 
-    commandRlBucket.consume();
+    try {
+      commandRlBucket.consume();
+    } catch (e) {}
 
     if (!client.cooldowns.has(command.name)) {
       client.cooldowns.set(
