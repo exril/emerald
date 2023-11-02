@@ -30,11 +30,15 @@ module.exports = {
       backgroundColour,
     });
 
-    const gen = (ws, msg) => {
+    const gen = (wsl, msg) => {
       let rnd = Math.random();
-      ws = ws + Math.floor(rnd * (-ws * 0.1 - ws * 0.1)) + ws * 0.15;
-      msg = msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.15;
-      return [ws, msg];
+      wsl = parseInt(
+        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1
+      );
+      msg = parseInt(
+        msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.1
+      );
+      return [wsl, msg];
     };
 
     await message.channel.send({ embeds: [emb] }).then(async (m) => {
@@ -59,7 +63,7 @@ module.exports = {
       const configuration = {
         type: "line",
         data: {
-          labels: ["ㅤ", "ㅤ", "ㅤ", "ㅤ", "ㅤ", "ㅤ", "ㅤ"],
+          labels: [" ", " ", " ", "Time ->", " ", " ", " "],
           datasets: [
             {
               label: "ws",
