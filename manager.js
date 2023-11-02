@@ -7,7 +7,9 @@ const YML = require("js-yaml").load(
 const cron = require("node-cron");
 const { Client } = require("discord.js");
 const { ActivityType } = require("discord.js");
-const client = new Client({ intents: 3276799 });
+const client = new Client({ 
+  intents: 3276799
+ });
 const { ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 
 const sleep = (t) => {
