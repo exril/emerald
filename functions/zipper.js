@@ -22,5 +22,5 @@ module.exports = async (file_name) => {
     "npm-shrinkwrap.json",
   ];
   const zipper = new archiver("./", file_name, false, ignored);
-  await zipper.createZip();
+  zipper.createZip();
 };
