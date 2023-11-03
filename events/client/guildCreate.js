@@ -29,7 +29,7 @@ module.exports = {
         components: [
           new ActionRowBuilder().addComponents(
             new client.button().link(`Support Server`, `${client.support}`),
-            new client.button().link(`Get Premium`, `${client.support}`)
+            new client.button().link(`Get Premium`, `${client.support}`),
           ),
         ],
       });

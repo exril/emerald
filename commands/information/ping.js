@@ -18,7 +18,7 @@ module.exports = {
   userPerms: [],
   execute: async (client, message, args) => {
     let emb = new client.embed().desc(
-      `${client.emoji.cool} **| Getting data. Please wait . . .**`
+      `${client.emoji.cool} **| Getting data. Please wait . . .**`,
     );
 
     const width = 800;
@@ -33,10 +33,10 @@ module.exports = {
     const gen = (wsl, msg) => {
       let rnd = Math.random();
       wsl = parseInt(
-        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1
+        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1,
       );
       msg = parseInt(
-        msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.1
+        msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.1,
       );
       return [wsl, msg];
     };
@@ -126,7 +126,7 @@ module.exports = {
             `${client.emoji.json} -  **DB Deleteㅤ : **\`${dbData[3]} ms\`\n` +
             `${client.emoji.json} - **DB Totalㅤ : **\`${dbData[0]} ms\`\n` +
             `${client.emoji.cloud} - **WS Latencyㅤ: **\`${ws} ms\`\n` +
-            `${client.emoji.message} - **MSG Latency : **\`${msg} ms\`\n`
+            `${client.emoji.message} - **MSG Latency : **\`${msg} ms\`\n`,
         )
         .thumb(client.user.displayAvatarURL())
         .img(`attachment://${attachment.name}`)

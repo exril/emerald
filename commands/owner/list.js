@@ -38,7 +38,7 @@ module.exports = {
           embeds: [
             new client.embed().desc(
               `${client.emoji.no} **No valid static provided\n**` +
-                `${client.emoji.bell} **Avaliable options :** \`np\`, \`bl\`, \`premium\``
+                `${client.emoji.bell} **Avaliable options :** \`np\`, \`bl\`, \`premium\``,
             ),
           ],
         });
@@ -57,7 +57,7 @@ module.exports = {
       id = db == "blacklist" ? id : id.split("_")[1];
       let user = await client.users.fetch(id);
       names.push(
-        `**• [${user.username}](https://discord.com/users/${user.id}) [${user.id}]**`
+        `**• [${user.username}](https://discord.com/users/${user.id}) [${user.id}]**`,
       );
     }
     const mapping = require("lodash").chunk(names, 10);
@@ -68,7 +68,7 @@ module.exports = {
         .desc(
           `## ${db.charAt(0).toUpperCase() + db.slice(1)} users list : \n\n${
             descriptions[i]
-          }`
+          }`,
         )
         .setFooter({ text: `Page • 1/${pages.length}` });
       pages.push(embed);

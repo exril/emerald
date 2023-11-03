@@ -2,7 +2,7 @@
 require("dotenv").config();
 require("@utils/web_server");
 const YML = require("js-yaml").load(
-  require("fs").readFileSync("./config.yml", "utf8")
+  require("fs").readFileSync("./config.yml", "utf8"),
 );
 const cron = require("node-cron");
 const { Client } = require("discord.js");
@@ -19,7 +19,7 @@ const sleep = (t) => {
 client.on("ready", async () => {
   require("@plugins/logger").log(
     `Ready! Logged in as ${client.user.tag}`,
-    "manager"
+    "manager",
   );
   client.prefix = "!";
   client.config = require("./config/options");
@@ -68,9 +68,12 @@ client.on("ready", async () => {
           fs.unlink(file, () => {
             return;
           });
-          setTimeout(async () => {
-            await msg.delete();
-          }, 5 * 60 * 1000);
+          setTimeout(
+            async () => {
+              await msg.delete();
+            },
+            5 * 60 * 1000,
+          );
         });
     };
 
@@ -96,7 +99,7 @@ client.on("messageCreate", async (message) => {
 
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const prefixRegex = new RegExp(
-    `^(<@!?${client.user.id}>|${escapeRegex(client.prefix)})\\s*`
+    `^(<@!?${client.user.id}>|${escapeRegex(client.prefix)})\\s*`,
   );
   if (!prefixRegex.test(message.content.toLowerCase())) return;
   const [matchedPrefix] = message.content.toLowerCase().match(prefixRegex);
@@ -121,7 +124,7 @@ client.on("messageCreate", async (message) => {
       message?.mentions?.members?.first().send({
         embeds: [
           new client.embed().desc(
-            `${client.emoji.premium} **Here is your generated code**\nUse [\`${client.prefix}redeem <code>\`](${client.support}) to activate your premium`
+            `${client.emoji.premium} **Here is your generated code**\nUse [\`${client.prefix}redeem <code>\`](${client.support}) to activate your premium`,
           ),
           new client.embed().desc(`${code}`),
         ],
@@ -132,7 +135,7 @@ client.on("messageCreate", async (message) => {
           new client.embed().desc(
             `${
               client.emoji.yes
-            } **DM'd code to ${message?.mentions?.members?.first()}**`
+            } **DM'd code to ${message?.mentions?.members?.first()}**`,
           ),
         ],
       });
@@ -141,7 +144,7 @@ client.on("messageCreate", async (message) => {
     message.channel.send({
       embeds: [
         new client.embed().desc(
-          `${client.emoji.premium} **Here is your generated code**\nUse [\`${client.prefix}redeem <code>\`](${client.support}) to activate your premium`
+          `${client.emoji.premium} **Here is your generated code**\nUse [\`${client.prefix}redeem <code>\`](${client.support}) to activate your premium`,
         ),
         new client.embed().desc(`${code}`),
       ],
@@ -155,7 +158,7 @@ client.on("messageCreate", async (message) => {
       return message.channel.send({
         embeds: [
           new client.embed().desc(
-            `**${client.emoji.no} Code invalid or already redeemed**`
+            `**${client.emoji.no} Code invalid or already redeemed**`,
           ),
         ],
       });
@@ -194,7 +197,7 @@ client.on("messageCreate", async (message) => {
         if (!interaction.deferred) await interaction.deferUpdate();
         await client.premium.set(
           `${interaction.values}_${message.author.id}`,
-          true
+          true,
         );
         const bot = await client.users.fetch(`${interaction.values}`);
         const avatar = await bot.displayAvatarURL();
@@ -206,7 +209,7 @@ client.on("messageCreate", async (message) => {
                 .title(`${client.emoji.premium} Premium Activated !`)
                 .desc(
                   `${client.emoji.space} **Client : **<@${interaction.values}>\n` +
-                    `**${client.emoji.space} For a Duration of : **Lifetime`
+                    `**${client.emoji.space} For a Duration of : **Lifetime`,
                 )
                 .addFields({
                   name: `Privilages attained :\n`,
@@ -231,7 +234,7 @@ client.on("messageCreate", async (message) => {
           .edit({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.warn} **Timeout ! No options selected**`
+                `${client.emoji.warn} **Timeout ! No options selected**`,
               ),
             ],
             components: [],

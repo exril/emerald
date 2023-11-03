@@ -59,7 +59,7 @@ module.exports = {
       if (blacklistUser)
         return await client.emit("blUser", message, blacklistUser);
       const mentionRlBucket = spamRateLimitManager.acquire(
-        `${message.author.id}`
+        `${message.author.id}`,
       );
       if (mentionRlBucket.limited && !owner && !admin)
         return client.blacklist.set(`${message.author.id}`, true);
@@ -81,7 +81,7 @@ module.exports = {
 
     const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const prefixRegex = new RegExp(
-      `^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`
+      `^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`,
     );
     if (!prefixRegex.test(message.content.toLowerCase())) return;
     const [matchedPrefix] = message.content.toLowerCase().match(prefixRegex);
@@ -95,7 +95,7 @@ module.exports = {
     const command =
       client.commands.get(commandName) ||
       client.commands.find(
-        (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
+        (cmd) => cmd.aliases && cmd.aliases.includes(commandName),
       );
 
     if (!command) return;
@@ -113,7 +113,7 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     const commandRlBucket = spamRateLimitManager.acquire(
-      `${message.author.id}`
+      `${message.author.id}`,
     );
 
     if (commandRlBucket.limited && !owner && !admin)
@@ -130,7 +130,7 @@ module.exports = {
     if (!client.cooldowns.has(command.name)) {
       client.cooldowns.set(
         command.name,
-        new (require("discord.js").Collection)()
+        new (require("discord.js").Collection)(),
       );
     }
 
@@ -143,7 +143,7 @@ module.exports = {
 
       if (now < expirationTime) {
         const cooldownRlBucket = cooldownRateLimitManager.acquire(
-          `${message.author.id}_${command.name}`
+          `${message.author.id}_${command.name}`,
         );
         if (cooldownRlBucket.limited) return;
         try {
@@ -193,7 +193,7 @@ module.exports = {
         .send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.warn} **I need \`SEND_MESSAGES\` permission in ${message.channel} to execute the command \`${command.name}\`**`
+              `${client.emoji.warn} **I need \`SEND_MESSAGES\` permission in ${message.channel} to execute the command \`${command.name}\`**`,
             ),
           ],
         })
@@ -212,7 +212,7 @@ module.exports = {
         .send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.warn} **I need \`EMBED_LINKS\` permission in ${message.channel} to execute the command \`${command.name}\`**`
+              `${client.emoji.warn} **I need \`EMBED_LINKS\` permission in ${message.channel} to execute the command \`${command.name}\`**`,
             ),
           ],
         })
@@ -241,8 +241,8 @@ module.exports = {
         embeds: [
           new client.embed().desc(
             `${client.emoji.warn} **You need \`${command.userPerms.join(
-              ", "
-            )}\` permission/s to use this command**`
+              ", ",
+            )}\` permission/s to use this command**`,
           ),
         ],
       });
@@ -263,8 +263,8 @@ module.exports = {
         embeds: [
           new client.embed().desc(
             `${client.emoji.warn} **I need \`${command.userPerms.join(
-              ", "
-            )}\` in ${message.channel} permission/s to execute this command**`
+              ", ",
+            )}\` in ${message.channel} permission/s to execute this command**`,
           ),
         ],
       });
@@ -279,7 +279,7 @@ module.exports = {
         return message.channel.send({
           embeds: [
             embed.desc(
-              `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`
+              `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`,
             ),
           ],
         });
@@ -294,7 +294,7 @@ module.exports = {
         return message.channel.send({
           embeds: [
             embed.desc(
-              `${client.emoji.king} **Only my Owner/s can use this command**`
+              `${client.emoji.king} **Only my Owner/s can use this command**`,
             ),
           ],
         });
@@ -313,7 +313,7 @@ module.exports = {
             headers: {
               Authorization: client.topGgAuth,
             },
-          }
+          },
         )
           .then((res) => res.json())
           .then((json) => {
@@ -328,7 +328,7 @@ module.exports = {
             embeds: [
               embed.desc(
                 `${client.emoji.premium} **Only my Voter/s can use this command**\n` +
-                  `[Click to vote me](${client.vote})`
+                  `[Click to vote me](${client.vote})`,
               ),
             ],
           });

@@ -41,7 +41,7 @@ module.exports = {
           return message.channel.send({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> already has this privilage**`
+                `${client.emoji.bell} **<@${id}> already has this privilage**`,
               ),
             ],
           });
@@ -50,7 +50,7 @@ module.exports = {
         message.channel.send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.on} **No prefix privilage added to <@${id}>**`
+              `${client.emoji.on} **No prefix privilage added to <@${id}>**`,
             ),
           ],
         });
@@ -61,7 +61,7 @@ module.exports = {
           return message.channel.send({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> is already blacklisted**`
+                `${client.emoji.bell} **<@${id}> is already blacklisted**`,
               ),
             ],
           });
@@ -70,7 +70,7 @@ module.exports = {
         message.channel.send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.on} **Added <@${id}> to blacklist**`
+              `${client.emoji.on} **Added <@${id}> to blacklist**`,
             ),
           ],
         });
@@ -81,7 +81,7 @@ module.exports = {
           return message.channel.send({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> is already a premium subscriber**`
+                `${client.emoji.bell} **<@${id}> is already a premium subscriber**`,
               ),
             ],
           });
@@ -90,7 +90,7 @@ module.exports = {
         message.channel.send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.on} **Premium subscription added to <@${id}>**`
+              `${client.emoji.on} **Premium subscription added to <@${id}>**`,
             ),
           ],
         });
@@ -100,7 +100,7 @@ module.exports = {
           embeds: [
             new client.embed().desc(
               `${client.emoji.no} **No valid static provided\n**` +
-                `${client.emoji.bell} **Avaliable options :** \`np\`, \`bl\`, \`premium\``
+                `${client.emoji.bell} **Avaliable options :** \`np\`, \`bl\`, \`premium\``,
             ),
           ],
         });
