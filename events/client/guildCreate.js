@@ -4,6 +4,11 @@ module.exports = {
   name: "guildCreate",
   run: async (client, guild) => {
     if (!guild.name) return;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////// Send a thank you message to guild owner ///////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
     const { ActionRowBuilder } = require("discord.js");
     let desc =
       `${
@@ -24,7 +29,7 @@ module.exports = {
         components: [
           new ActionRowBuilder().addComponents(
             new client.button().link(`Support Server`, `${client.support}`),
-            new client.button().link(`Get Premium`, `${client.support}`),
+            new client.button().link(`Get Premium`, `${client.support}`)
           ),
         ],
       });

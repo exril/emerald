@@ -20,7 +20,7 @@ module.exports = {
     const backup_zip_creator = require("@functions/zipper.js");
 
     const backup_zip_manager = async (msg) => {
-      const file = `./fuego-${args[0] ? `${args[0]}-` : ``}${date}.zip`;
+      const file = `./emerald-${args[0] ? `${args[0]}-` : ``}${date}.zip`;
 
       await backup_zip_creator(file);
 
@@ -29,7 +29,7 @@ module.exports = {
       let m = await msg.channel.send({
         embeds: [
           new client.embed().desc(
-            `**${client.emoji.cool} | Preparing zip please wait. . .**`,
+            `**${client.emoji.cool} | Preparing zip please wait. . .**`
           ),
         ],
       });
@@ -42,7 +42,7 @@ module.exports = {
             new client.embed().desc(
               `> ${client.emoji.json} - Name: Backup${
                 args[0] ? `-${args[0]}` : ``
-              }\n` + `> ${client.emoji.cool} - ${date}`,
+              }\n` + `> ${client.emoji.cool} - ${date}`
             ),
           ],
           files: [
@@ -55,7 +55,7 @@ module.exports = {
           await m.edit({
             embeds: [
               new client.embed().desc(
-                `**${client.emoji.cloud} | Successfully sent zip to DM**`,
+                `**${client.emoji.cloud} | Successfully sent zip to DM**`
               ),
             ],
           });
