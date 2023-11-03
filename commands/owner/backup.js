@@ -59,16 +59,22 @@ module.exports = {
               ),
             ],
           });
+        })
+        .catch(async (err) => {
+          await m.edit({
+            embeds: [
+              new client.embed().desc(
+                `**${client.emoji.no} | Could not send zip to DM**\n${err}`,
+              ),
+            ],
+          });
         });
       const fs = require("fs");
       await fs.unlink(file, () => {
         return;
       });
     };
-    const run = async () => {
-      await backup_zip_manager(message);
-    };
 
-    run();
+    await backup_zip_manager(message);
   },
 };

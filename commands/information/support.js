@@ -21,6 +21,6 @@ module.exports = {
         .link("Click to join Support Server", client.support)
         .setEmoji(client.emoji.support),
     );
-    await message.channel.send({ components: [row] });
+    await message.reply({ components: [row] });
   },
 };

@@ -1,7 +1,7 @@
 /** @format */
 
 const { RateLimitManager } = require("@sapphire/ratelimits");
-const spamRateLimitManager = new RateLimitManager(10000, 4);
+const spamRateLimitManager = new RateLimitManager(10000, 5);
 const cooldownRateLimitManager = new RateLimitManager(5000);
 
 const fetch = (...args) =>
@@ -24,7 +24,7 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     let voted = false;
-    const [noPrefixUser, premiumUser, blacklistUser, owner, admin] =
+    let [noPrefixUser, premiumUser, blacklistUser, owner, admin] =
       await Promise.all([
         await client.noPrefix.get(`${client.user.id}_${message.author.id}`),
         await client.premium.get(`${client.user.id}_${message.author.id}`),
@@ -219,14 +219,22 @@ module.exports = {
         .catch(() => {});
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// Check args needed or not if yes check provided or not /////////////////////
+    ////////////////////////// Check args and emit command infoRequested event ////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+    if (args[0]?.toLowerCase() == "-h")
+      return await client.emit("infoRequested", message, command);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////// Check args needed or not if yes check provided or not /////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
     if (command.args && !args.length) {
       let reply = `${client.emoji.no} **Invalid/No args provided**`;
       if (command.usage)
         reply += `\n${client.emoji.bell} Usage: \`${prefix}${command.name} ${command.usage}\``;
-      return message.channel.send({ embeds: [new client.embed().desc(reply)] });
+      return await message.reply({
+        embeds: [new client.embed().desc(reply)],
+      });
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +245,7 @@ module.exports = {
       command.userPerms &&
       !message.member.permissions.has(command.userPerms)
     ) {
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(
             `${client.emoji.warn} **You need \`${command.userPerms.join(
@@ -259,7 +267,7 @@ module.exports = {
         .permissionsFor(message.guild.members.me)
         ?.has(command.botPerms)
     ) {
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(
             `${client.emoji.warn} **I need \`${command.userPerms.join(
@@ -276,7 +284,7 @@ module.exports = {
 
     if (command.admin) {
       if (!owner && !admin)
-        return message.channel.send({
+        return await message.reply({
           embeds: [
             embed.desc(
               `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`,
@@ -291,7 +299,7 @@ module.exports = {
 
     if (command.owner && !command.admin) {
       if (!owner)
-        return message.channel.send({
+        return await message.reply({
           embeds: [
             embed.desc(
               `${client.emoji.king} **Only my Owner/s can use this command**`,
@@ -324,7 +332,7 @@ module.exports = {
             return (voted = true);
           });
         if (!voted)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
               embed.desc(
                 `${client.emoji.premium} **Only my Voter/s can use this command**\n` +

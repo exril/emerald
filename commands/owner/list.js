@@ -34,7 +34,7 @@ module.exports = {
         break;
 
       default:
-        message.channel.send({
+        return await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.no} **No valid static provided\n**` +
@@ -42,12 +42,11 @@ module.exports = {
             ),
           ],
         });
-        return;
     }
 
     let ids = await client[db].keys;
     if (!ids.length)
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(`${client.emoji.no}**No users found !**`),
         ],

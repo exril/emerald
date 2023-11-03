@@ -101,7 +101,7 @@ module.exports = {
       btn5,
     );
 
-    const msg = await message.channel.send({
+    const msg = await message.reply({
       embeds: [pages[page]],
       components: [row],
     });

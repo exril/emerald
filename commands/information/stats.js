@@ -76,6 +76,6 @@ module.exports = {
       });
     }
 
-    msg.edit({ embeds: [embed] });
+    await msg.edit({ embeds: [embed] }).catch(() => {});
   },
 };

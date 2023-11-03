@@ -21,7 +21,7 @@ module.exports = {
     let valid = (await client.users.fetch(id).catch(() => {})) || null;
 
     if (!valid)
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(`${client.emoji.no} **Invalid User**`),
         ],
@@ -29,7 +29,7 @@ module.exports = {
 
     const [np, bl, premium] = await Promise.all([
       await client.noPrefix.get(`${client.user.id}_${id}`),
-      await client.blacklist.get(`${client.user.id}_${id}`),
+      await client.blacklist.get(`${id}`),
       await client.premium.get(`${client.user.id}_${id}`),
     ]);
 
@@ -38,7 +38,7 @@ module.exports = {
     switch (static) {
       case "np":
         if (np)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
               new client.embed().desc(
                 `${client.emoji.bell} **<@${id}> already has this privilage**`,
@@ -47,7 +47,7 @@ module.exports = {
           });
 
         await client.noPrefix.set(`${client.user.id}_${id}`, true);
-        message.channel.send({
+        await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.on} **No prefix privilage added to <@${id}>**`,
@@ -58,7 +58,7 @@ module.exports = {
 
       case "bl":
         if (bl)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
               new client.embed().desc(
                 `${client.emoji.bell} **<@${id}> is already blacklisted**`,
@@ -66,8 +66,8 @@ module.exports = {
             ],
           });
 
-        await client.noPrefix.set(`${client.user.id}_${id}`, true);
-        message.channel.send({
+        await client.blacklist.set(`${id}`, true);
+        await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.on} **Added <@${id}> to blacklist**`,
@@ -78,7 +78,7 @@ module.exports = {
 
       case "premium":
         if (premium)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
               new client.embed().desc(
                 `${client.emoji.bell} **<@${id}> is already a premium subscriber**`,
@@ -87,7 +87,7 @@ module.exports = {
           });
 
         await client.noPrefix.set(`${client.user.id}_${id}`, true);
-        message.channel.send({
+        await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.on} **Premium subscription added to <@${id}>**`,
@@ -96,7 +96,7 @@ module.exports = {
         });
         break;
       default:
-        message.channel.send({
+        message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.no} **No valid static provided\n**` +

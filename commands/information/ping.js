@@ -41,7 +41,7 @@ module.exports = {
       return [wsl, msg];
     };
 
-    await message.channel.send({ embeds: [emb] }).then(async (m) => {
+    await message.reply({ embeds: [emb] }).then(async (m) => {
       let josh = async () => {
         const start = Date.now();
         await client.noPrefix.set("test", true);

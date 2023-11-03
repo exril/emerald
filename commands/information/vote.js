@@ -21,6 +21,6 @@ module.exports = {
         .link("Click to Vote me on Top.gg", client.vote || client.support)
         .setEmoji(client.emoji.love),
     );
-    message.channel.send({ components: [row] });
+    await message.reply({ components: [row] });
   },
 };

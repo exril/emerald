@@ -28,7 +28,7 @@ module.exports = {
           ];
 
     if (!commands)
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(
             `${client.emoji.warn} **There is no command with provided name or alias**`,
@@ -59,7 +59,7 @@ module.exports = {
       }
     }
 
-    await message.channel.send({
+    return await message.reply({
       embeds: [
         new client.embed().desc(
           `${

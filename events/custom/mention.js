@@ -20,6 +20,6 @@ module.exports = {
         text: `By ━● 1sT-Services`,
       })
       .setTimestamp();
-    message.channel.send({ embeds: [embed] });
+    await message.reply({ embeds: [embed] }).catch(() => {});
   },
 };

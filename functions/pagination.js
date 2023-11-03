@@ -11,14 +11,16 @@ module.exports = async (client, message, pages) => {
     new client.button().secondary(`end`, `❌`),
   );
 
-  const curPage = await message.channel.send({
-    embeds: [
-      pages[page].setFooter({
-        text: `Page [${page + 1}/${pages.length}] By ━● 1sT-Services`,
-      }),
-    ],
-    components: [row],
-  });
+  const curPage = await message.channel
+    .send({
+      embeds: [
+        pages[page].setFooter({
+          text: `Page [${page + 1}/${pages.length}] By ━● 1sT-Services`,
+        }),
+      ],
+      components: [row],
+    })
+    .catch(() => {});
 
   const filter = (m) => m.user.id === message.author.id;
   const collector = curPage?.createMessageComponentCollector({
@@ -78,13 +80,6 @@ module.exports = async (client, message, pages) => {
   collector.on("end", () => {
     curPage
       .edit({
-        embeds: [
-          pages[page].setFooter({
-            text: `Powered by • 1sT-Services | Page • ${page + 1}/${
-              pages.length
-            }`,
-          }),
-        ],
         components: [],
       })
       .catch(() => {});

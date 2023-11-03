@@ -14,7 +14,7 @@ module.exports = {
   botPerms: [],
   userPerms: [],
   execute: async (client, message, args) => {
-    await message.channel.send({
+    await message.reply({
       embeds: [
         new client.embed().desc(
           `${client.emoji.cool} **| Respawning all shards. ETA: 10-15s**`,

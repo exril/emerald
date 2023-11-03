@@ -23,6 +23,6 @@ module.exports = {
     const mainPage = new client.embed().desc(
       `${client.emoji.arrow} **Click one of the buttons below to Invite Me **`,
     );
-    message.channel.send({ embeds: [mainPage], components: [row] });
+    await message.reply({ embeds: [mainPage], components: [row] });
   },
 };

@@ -21,7 +21,7 @@ module.exports = {
     let valid = (await client.users.fetch(id).catch(() => {})) || null;
 
     if (!valid)
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(`${client.emoji.no} **Invalid User**`),
         ],
@@ -29,7 +29,7 @@ module.exports = {
 
     const [np, bl, premium] = await Promise.all([
       await client.noPrefix.get(`${client.user.id}_${id}`),
-      await client.blacklist.get(`${client.user.id}_${id}`),
+      await client.blacklist.get(`${id}`),
       await client.premium.get(`${client.user.id}_${id}`),
     ]);
 
@@ -38,7 +38,7 @@ module.exports = {
     switch (static) {
       case "np":
         if (!np)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
               new client.embed().desc(
                 `${client.emoji.bell} **<@${id}> doesn't have this privilage**`,
@@ -46,8 +46,8 @@ module.exports = {
             ],
           });
 
-        await client.noPrefix.delete(`${client.user.id}_${id}`);
-        message.channel.send({
+        await client.noPrefix.delete(`${id}`);
+        await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.off} **No prefix privilage removed from <@${id}>**`,
@@ -58,7 +58,7 @@ module.exports = {
 
       case "bl":
         if (!bl)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
               new client.embed().desc(
                 `${client.emoji.bell} **<@${id}> is not blacklisted**`,
@@ -66,8 +66,8 @@ module.exports = {
             ],
           });
 
-        await client.blacklist.delete(`${client.user.id}_${id}`);
-        message.channel.send({
+        await client.blacklist.delete(`${id}`);
+        await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.off} **Removed <@${id}> from blacklist**`,
@@ -78,7 +78,7 @@ module.exports = {
 
       case "premium":
         if (!premium)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
               new client.embed().desc(
                 `${client.emoji.bell} **<@${id}> is not a premium subscriber**`,
@@ -87,7 +87,7 @@ module.exports = {
           });
 
         await client.premium.delete(`${client.user.id}_${id}`);
-        message.channel.send({
+        await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.off} **Premium subscription revoked for <@${id}>**`,
@@ -96,7 +96,7 @@ module.exports = {
         });
         break;
       default:
-        message.channel.send({
+        await message.reply({
           embeds: [
             new client.embed().desc(
               `${client.emoji.no} **No valid static provided\n**` +

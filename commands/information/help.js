@@ -1,5 +1,6 @@
 /** @format */
 
+const genCommandList = require("@functions/commandList.js");
 const { ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 
 module.exports = {
@@ -16,71 +17,16 @@ module.exports = {
   botPerms: [],
   userPerms: [],
   execute: async (client, message, args) => {
-    const genCommandList = async (category) => {
-      let commands = await client.commands
-        .filter((x) => x.category && x.category === category)
-        .map(
-          (x) =>
-            `${client.emoji.point} **\`${x.name}\` → [${
-              x.description || "No description"
-            }](${client.support})** ${x.new ? `${client.emoji.new}` : ""}${
-              x.vote ? `${client.emoji.premium}` : ""
-            }`,
-        )
-        .join("\n");
-      return commands || "**No commands to display**";
-    };
+    let categories = await client.categories.filter((c) => c != "owner");
 
-    if (args[0]) {
-      const category = args[0].toLowerCase();
-      if (client.categories.includes(category)) {
-        return message.channel.send({
-          embeds: [
-            new client.embed()
-              .desc(await genCommandList(category))
-              .title(
-                `${
-                  category.charAt(0).toUpperCase() + category.slice(1)
-                } - related Commands`,
-              )
-              .setFooter({
-                text: `By ━● 1sT-Services | Please run ${prefix}help for full menu`,
-              }),
-          ],
-        });
-      }
-
-      const cmd =
-        client.commands.get(args[0].toLowerCase()) ||
-        client.commands.find(
-          (cmd) => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()),
-        );
-
-      if (cmd) {
-        return message.channel.send({
-          embeds: [
-            new client.embed()
-              .desc(
-                ` **${client.emoji.point} Nameㅤ →ㅤ${cmd.name} ${
-                  cmd.aliases?.[0] ? `, ${cmd.aliases.join(", ")}` : ""
-                }\n` +
-                  `${client.emoji.point} Infoㅤㅤ→ㅤ${
-                    cmd.description || "Not Available"
-                  }\n` +
-                  `${client.emoji.point} Usageㅤ→ㅤ[${client.prefix}${cmd.name} ${cmd.usage}](${client.support})\n**`,
-              )
-              .title(
-                `Command info - ${
-                  cmd.name.charAt(0).toUpperCase() + cmd.name.slice(1)
-                }`,
-              )
-              .setFooter({
-                text: `By ━● 1sT-Services | Please run ${prefix}help for menu`,
-              }),
-          ],
-        });
-      }
-    }
+    let cat = categories
+      .map(
+        (c) =>
+          `> ${client.emoji.point}** ${
+            c.charAt(0).toUpperCase() + c.slice(1)
+          }**\n`,
+      )
+      .join("");
 
     const embed = new client.embed()
       .setAuthor({
@@ -88,36 +34,18 @@ module.exports = {
           message.member.nickname || message.member.user.username
         } I am the ,`,
       })
-      .desc(
-        `**Definiton of the best music bot**` +
-          `\n\n` +
-          `> ${client.emoji.point}** Music**\n` +
-          `> ${client.emoji.point}** Filters**\n` +
-          `> ${client.emoji.point}** information**\n`,
-      )
+      .desc(`**Definiton of the best music bot**` + `\n\n` + cat)
       .thumb(client.user.displayAvatarURL())
       .setFooter({
-        text: `Page [1/5] By ━● 1sT-Services`,
-        iconURL:
-          "https://media.discordapp.net/attachments/1145600285553741884/1145600466068185088/3061501b2e6bdcc1762deeb76218addc.webp",
+        text: `Developed By ━● 1sT-Servicesㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ`,
       });
 
-    const cmds = async (cat) => {
-      return await (
-        await client.commands.filter((c) => {
-          if (c.category == cat) return c.name;
-        })
-      )
-        .map((c) => `\`${c.name}\``)
-        .join(", ");
-    };
-
     let arr = [];
-    for (cat of client.categories) {
+    for (cat of categories) {
       cmnds = client.commands.filter((c) => c.category == cat);
       arr.push(cmnds.map((c) => `\`${c.name}\``));
     }
-    let allCmds = await client.categories.map(
+    let allCmds = await categories.map(
       (cat, i) =>
         `${client.emoji.point} **[${cat}](${client.support})\n ${arr[i].join(
           ",",
@@ -126,11 +54,11 @@ module.exports = {
     desc = allCmds.join("\n\n");
 
     const all = new client.embed().desc(desc).setFooter({
-      text: `Page [5/5] By ━● 1sT-Services`,
+      text: `Developed By ━● 1sT-Servicesㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ`,
     });
 
     let menu = new StringSelectMenuBuilder()
-      .setCustomId("helpop")
+      .setCustomId("menu")
       .setMinValues(1)
       .setMaxValues(1)
       .setPlaceholder("Select category to view commands")
@@ -143,14 +71,12 @@ module.exports = {
       ]);
     const selectMenu = new ActionRowBuilder().addComponents(menu);
 
-    client.categories.forEach((category) => {
-      if (category !== "owner") {
-        menu.addOptions({
-          label: category.charAt(0).toUpperCase() + category.slice(1),
-          value: category,
-          emoji: `${client.emoji.arrow}`,
-        });
-      }
+    categories.forEach((category) => {
+      menu.addOptions({
+        label: category.charAt(0).toUpperCase() + category.slice(1),
+        value: category,
+        emoji: `${client.emoji.arrow}`,
+      });
     });
 
     menu.addOptions([
@@ -161,7 +87,7 @@ module.exports = {
       },
     ]);
 
-    const m = await message.channel.send({
+    const m = await message.reply({
       embeds: [embed],
       components: [selectMenu],
     });
@@ -194,25 +120,18 @@ module.exports = {
           break;
 
         default:
-          let x = {};
-
-          for (i = 0; i < client.categories.length; i++) {
-            x[client.categories[i]] = i + 1;
-          }
-
-          page = x[category];
           await m
             .edit({
               embeds: [
                 new client.embed()
-                  .desc(await genCommandList(category))
+                  .desc(await genCommandList(client, category))
                   .title(
                     `${
                       category.charAt(0).toUpperCase() + category.slice(1)
                     } - related Commands`,
                   )
                   .setFooter({
-                    text: `Page [${page + 1}/5] By ━● 1sT-Services`,
+                    text: `Developed By ━● 1sT-Servicesㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ`,
                   }),
               ],
             })
