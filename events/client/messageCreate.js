@@ -1,7 +1,8 @@
 /** @format */
 
 const { RateLimitManager } = require("@sapphire/ratelimits");
-const rateLimitManager = new RateLimitManager(10000, 4);
+const spamRateLimitManager = new RateLimitManager(10000, 4);
+const cooldownRateLimitManager = new RateLimitManager(5000);
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -23,7 +24,7 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     let voted = false;
-    const [noPrefixUser, premiumUser, blacklistUser, developer, admin] =
+    const [noPrefixUser, premiumUser, blacklistUser, owner, admin] =
       await Promise.all([
         await client.noPrefix.get(`${client.user.id}_${message.author.id}`),
         await client.premium.get(`${client.user.id}_${message.author.id}`),
@@ -31,6 +32,8 @@ module.exports = {
         await client.owners.find((x) => x === message.author.id),
         await client.admins.find((x) => x === message.author.id),
       ]);
+
+    if (owner || admin) blacklistUser = false;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////// Dokdo ///////////////////////////////////////////////
@@ -55,8 +58,10 @@ module.exports = {
     if (message.content.match(mention)) {
       if (blacklistUser)
         return await client.emit("blUser", message, blacklistUser);
-      const mentionRlBucket = rateLimitManager.acquire(`${message.author.id}`);
-      if (mentionRlBucket.limited && !developer && !admin)
+      const mentionRlBucket = spamRateLimitManager.acquire(
+        `${message.author.id}`
+      );
+      if (mentionRlBucket.limited && !owner && !admin)
         return client.blacklist.set(`${message.author.id}`, true);
       try {
         mentionRlBucket.consume();
@@ -107,9 +112,11 @@ module.exports = {
     /////////////////////////////// Auto - Blacklist on command spam //////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const commandRlBucket = rateLimitManager.acquire(`${message.author.id}`);
+    const commandRlBucket = spamRateLimitManager.acquire(
+      `${message.author.id}`
+    );
 
-    if (commandRlBucket.limited && !developer && !admin)
+    if (commandRlBucket.limited && !owner && !admin)
       return client.blacklist.set(`${message.author.id}`, true);
 
     try {
@@ -131,10 +138,18 @@ module.exports = {
     const timestamps = client.cooldowns.get(command.name);
     const cooldownAmount = parseInt(command.cooldown) || 5000;
 
-    if (timestamps.has(message.author.id) && !developer) {
+    if (timestamps.has(message.author.id) && !owner && !admin) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
       if (now < expirationTime) {
+        const cooldownRlBucket = cooldownRateLimitManager.acquire(
+          `${message.author.id}_${command.name}`
+        );
+        if (cooldownRlBucket.limited) return;
+        try {
+          cooldownRlBucket.consume();
+        } catch (e) {}
+
         const expiredTimestamp = Math.round((expirationTime - now) / 1000);
         description = ` Please wait ${expiredTimestamp} second(s) before reusing the command **\`${command.name}\``;
         return message.channel
@@ -143,12 +158,11 @@ module.exports = {
               new client.embed().desc(`${client.emoji.cool} **${description}`),
             ],
           })
-          .then(
-            async (m) =>
-              await setTimeout(async () => {
-                m.delete().catch(() => {});
-              }, 3000)
-          );
+          .then(async (m) => {
+            await setTimeout(async () => {
+              m.delete().catch(() => {});
+            }, 3000);
+          });
       }
     }
 
@@ -261,7 +275,7 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     if (command.admin) {
-      if (!developer && !admin)
+      if (!owner && !admin)
         return message.channel.send({
           embeds: [
             embed.desc(
@@ -276,7 +290,7 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     if (command.owner && !command.admin) {
-      if (!developer)
+      if (!owner)
         return message.channel.send({
           embeds: [
             embed.desc(
@@ -290,7 +304,7 @@ module.exports = {
     /////////////////////////////////// Check vote locked commands ////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (command.vote && !developer && !premiumUser) {
+    if (command.vote && !owner && !premiumUser) {
       if (client.vote && client.topGgAuth) {
         await fetch(
           `https://top.gg/api/bots/${client.user.id}/check?userId=${message.author.id}`,

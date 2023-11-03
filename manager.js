@@ -1,15 +1,15 @@
 /** @format */
 require("dotenv").config();
-require("./utils/web_server");
+require("@utils/web_server");
 const YML = require("js-yaml").load(
   require("fs").readFileSync("./config.yml", "utf8")
 );
 const cron = require("node-cron");
 const { Client } = require("discord.js");
 const { ActivityType } = require("discord.js");
-const client = new Client({ 
-  intents: 3276799
- });
+const client = new Client({
+  intents: 3276799,
+});
 const { ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 
 const sleep = (t) => {
@@ -17,7 +17,7 @@ const sleep = (t) => {
 };
 
 client.on("ready", async () => {
-  require("./plugins/logger").log(
+  require("@plugins/logger").log(
     `Ready! Logged in as ${client.user.tag}`,
     "manager"
   );
