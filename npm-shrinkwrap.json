@@ -37,7 +37,7 @@
         "prettier": "^3.0.3"
       },
       "engines": {
-        "node": "21.x"
+        "node": ">= 18.x"
       }
     },
     "node_modules/@discordjs/builders": {
