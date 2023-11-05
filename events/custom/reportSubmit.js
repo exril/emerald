@@ -21,7 +21,7 @@ module.exports = {
     await interaction.message.edit({
       embeds: [
         new client.embed().desc(
-          `${client.emoji.yes} **Successfully reported issue**`,
+          `${client.emoji.yes} **Successfully reported uour issue**`,
         ),
       ],
       components: [row],
@@ -38,10 +38,10 @@ module.exports = {
         new client.embed()
           .title(`Issue reported for : ${command}`)
           .desc(
-            `**User :** ${interaction.member} [${interaction.member}.id]\n` +
-              `**Guild :** ${interaction.guild} [${interaction.guild}.id]\n\n` +
-              `**Issue :** \`\`\`\n${issue}\`\`\`\n` +
-              `**Comments :** \`\`\`\n${
+            `${client.emoji.point} **User :** ${interaction.member} [${interaction.member.id}]\n` +
+              `${client.emoji.point} **Guild :** ${interaction.guild} [${interaction.guild.id}]\n\n` +
+              `${client.emoji.point} **Issue :** \`\`\`\n${issue}\`\`\`\n` +
+              `${client.emoji.point} **Comments :** \`\`\`\n${
                 comments || `No additional comments`
               }\`\`\`\n`,
           ),

@@ -3,7 +3,7 @@
 module.exports = {
   name: "interactionCreate",
   run: async (client, interaction) => {
-    if (interaction.isModalSubmit())
+    if (interaction.isModalSubmit()) {
       switch (interaction.customId) {
         case "report":
           await client.emit("reportSubmit", interaction);
@@ -12,5 +12,7 @@ module.exports = {
         default:
           break;
       }
+      return;
+    }
   },
 };

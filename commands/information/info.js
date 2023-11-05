@@ -117,8 +117,23 @@ module.exports = {
       files: [attachment],
     });
 
+    const filter = async (interaction) => {
+      if (interaction.user.id === message.author.id) {
+        return true;
+      }
+      await interaction.reply({
+        embeds: [
+          new client.embed().desc(
+            `${client.emoji.no} **This isn't meant for you**`,
+          ),
+        ],
+        ephemeral: true,
+      });
+      return false;
+    };
+
     const collector = msg.createMessageComponentCollector({
-      filter: ({ user }) => user.id === message.author.id,
+      filter,
       time: 60000,
       idle: 60000 / 2,
     });

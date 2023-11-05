@@ -22,7 +22,20 @@ module.exports = async (client, message, pages) => {
     })
     .catch(() => {});
 
-  const filter = (m) => m.user.id === message.author.id;
+  const filter = async (interaction) => {
+    if (interaction.user.id === message.author.id) {
+      return true;
+    }
+    await interaction.reply({
+      embeds: [
+        new client.embed().desc(
+          `${client.emoji.no} **This isn't meant for you**`,
+        ),
+      ],
+      ephemeral: true,
+    });
+    return false;
+  };
   const collector = curPage?.createMessageComponentCollector({
     filter,
     time: 30000,
