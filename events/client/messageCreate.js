@@ -136,7 +136,7 @@ module.exports = {
 
     const now = Date.now();
     const timestamps = client.cooldowns.get(command.name);
-    const cooldownAmount = parseInt(command.cooldown) || 5000;
+    const cooldownAmount = parseInt(command.cooldown) * 1000 || 5 * 1000;
 
     if (timestamps.has(message.author.id) && !owner && !admin) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
@@ -150,19 +150,15 @@ module.exports = {
           cooldownRlBucket.consume();
         } catch (e) {}
 
-        const expiredTimestamp = Math.round((expirationTime - now) / 1000);
-        description = ` Please wait ${expiredTimestamp} second(s) before reusing the command **\`${command.name}\``;
-        return message.channel
-          .send({
-            embeds: [
-              new client.embed().desc(`${client.emoji.cool} **${description}`),
-            ],
-          })
-          .then(async (m) => {
-            await setTimeout(async () => {
-              m.delete().catch(() => {});
-            }, 3000);
-          });
+        const expiredTimestamp = Math.round(expirationTime - now);
+        description = ` Please wait ${client.formatTime(
+          expiredTimestamp,
+        )} before reusing the command **\`${command.name}\``;
+        return message.channel.send({
+          embeds: [
+            new client.embed().desc(`${client.emoji.cool} **${description}`),
+          ],
+        });
       }
     }
 

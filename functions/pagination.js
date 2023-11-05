@@ -28,10 +28,10 @@ module.exports = async (client, message, pages) => {
     time: 30000,
   });
 
-  collector.on("collect", async (i) => {
-    await i.deferUpdate();
+  collector.on("collect", async (interaction) => {
+    await interaction.deferUpdate();
 
-    switch (i.customId) {
+    switch (interaction.customId) {
       case "home":
         page = 0;
         await curPage
