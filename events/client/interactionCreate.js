@@ -4,6 +4,13 @@ module.exports = {
   name: "interactionCreate",
   run: async (client, interaction) => {
     if (interaction.isModalSubmit())
-      return await client.emit("modalSubmit", interaction);
+      switch (interaction.customId) {
+        case "report":
+          await client.emit("reportSubmit", interaction);
+          break;
+
+        default:
+          break;
+      }
   },
 };
