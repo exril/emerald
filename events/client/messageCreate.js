@@ -286,7 +286,7 @@ module.exports = {
       if (!owner && !admin)
         return await message.reply({
           embeds: [
-            embed.desc(
+            new client.embed().desc(
               `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`,
             ),
           ],
@@ -301,7 +301,7 @@ module.exports = {
       if (!owner)
         return await message.reply({
           embeds: [
-            embed.desc(
+            new client.embed().desc(
               `${client.emoji.king} **Only my Owner/s can use this command**`,
             ),
           ],
@@ -334,7 +334,7 @@ module.exports = {
         if (!voted)
           return await message.reply({
             embeds: [
-              embed.desc(
+              new client.embed().desc(
                 `${client.emoji.premium} **Only my Voter/s can use this command**\n` +
                   `[Click to vote me](${client.vote})`,
               ),

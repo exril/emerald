@@ -43,14 +43,19 @@ module.exports = {
 
     await message.reply({ embeds: [emb] }).then(async (m) => {
       let josh = async () => {
-        const start = Date.now();
+        const start = performance.now();
         await client.noPrefix.set("test", true);
-        const write = Date.now();
+        const write = performance.now();
         await client.noPrefix.get("test");
-        const read = Date.now();
+        const read = performance.now();
         await client.noPrefix.delete("test");
-        const del = Date.now();
-        return [del - start, write - start, read - write, del - read];
+        const del = performance.now();
+        return [
+          (del - start).toFixed(2),
+          (write - start).toFixed(2),
+          (read - write).toFixed(2),
+          (del - read).toFixed(2),
+        ];
       };
       const ws = client.ws.ping;
       const msg = m.createdAt - message.createdAt;

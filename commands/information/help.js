@@ -48,7 +48,7 @@ module.exports = {
     let allCmds = await categories.map(
       (cat, i) =>
         `${client.emoji.point} **[${cat}](${client.support})\n ${arr[i].join(
-          ",",
+          ", ",
         )}**`,
     );
     desc = allCmds.join("\n\n");

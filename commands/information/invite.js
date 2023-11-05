@@ -20,9 +20,13 @@ module.exports = {
       new client.button().link("Required Perms", client.invite.required),
       new client.button().link("Admin Perms", client.invite.admin),
     );
-    const mainPage = new client.embed().desc(
-      `${client.emoji.arrow} **Click one of the buttons below to Invite Me **`,
-    );
-    await message.reply({ embeds: [mainPage], components: [row] });
+    await message.reply({
+      embeds: [
+        new client.embed().desc(
+          `${client.emoji.bell} **Click one of the buttons below to Invite Me **`,
+        ),
+      ],
+      components: [row],
+    });
   },
 };
