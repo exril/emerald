@@ -34,6 +34,7 @@ module.exports = class ExtendedClient extends Client {
 
     this.aliases = new Collection();
     this.commands = new Collection();
+    this.slashCommands = new Collection();
     this.cooldowns = new Collection();
 
     this.config = require("../config/options");
@@ -95,6 +96,7 @@ module.exports = class ExtendedClient extends Client {
       await require("@loaders/clientEvents.js")(client);
       await require("@loaders/customEvents.js")(client);
       await require("@loaders/commands.js")(client);
+      await require("@loaders/slashCommands.js")(client);
 
       this.log(
         `Ready for ${handler[0]} Servers | ${handler[1]} Users`,

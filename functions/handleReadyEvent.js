@@ -14,5 +14,7 @@ module.exports = (client) => {
 
   client.log(`Logged in to ${client.user.username}`, "debug");
 
+  require("../plugins/deploySlash")(client)
+
   return [gcount, mcount];
 };
