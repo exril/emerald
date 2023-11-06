@@ -48,15 +48,24 @@ module.exports = {
     if (!ids.length)
       return await message.reply({
         embeds: [
-          new client.embed().desc(`${client.emoji.no}**No users found !**`),
+          new client.embed().desc(`${client.emoji.no}**No entries found !**`),
         ],
       });
     let names = [];
     for (id of ids) {
-      id = db == "blacklist" ? id : id.split("_")[1];
-      let user = await client.users.fetch(id);
+      id = id.split("_")[1];
+      let user = await client.users.fetch(id).catch(
+        async () =>
+          await client.guilds.cache.get(id).catch(() => {
+            name: id;
+          }),
+      );
       names.push(
-        `**• [${user.username}](https://discord.com/users/${user.id}) [${user.id}]**`,
+        `** ${
+          user.username
+            ? `${client.emoji.user} [${user.username}`
+            : `${client.emoji.hash} [${user.name.substring(0, 15)}`
+        }](https://discord.com/users/${user.id}) [${user.id}]**`,
       );
     }
     const mapping = require("lodash").chunk(names, 10);
@@ -65,7 +74,7 @@ module.exports = {
     for (let i = 0; i < descriptions.length; i++) {
       const embed = new client.embed()
         .desc(
-          `## ${db.charAt(0).toUpperCase() + db.slice(1)} users list : \n\n${
+          `## ${db.charAt(0).toUpperCase() + db.slice(1)} list : \n\n${
             descriptions[i]
           }`,
         )

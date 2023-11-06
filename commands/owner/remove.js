@@ -29,7 +29,7 @@ module.exports = {
 
     const [np, bl, premium] = await Promise.all([
       await client.noPrefix.get(`${client.user.id}_${id}`),
-      await client.blacklist.get(`${id}`),
+      await client.blacklist.get(`${client.user.id}_${id}`),
       await client.premium.get(`${client.user.id}_${id}`),
     ]);
 
@@ -66,7 +66,7 @@ module.exports = {
             ],
           });
 
-        await client.blacklist.delete(`${id}`);
+        await client.blacklist.delete(`${client.user.id}_${id}`);
         await message.reply({
           embeds: [
             new client.embed().desc(

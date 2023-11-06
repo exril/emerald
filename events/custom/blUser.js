@@ -21,7 +21,10 @@ module.exports = {
     );
 
     if (blacklistUser != "warned") {
-      await client.blacklist.set(`${message.author.id}`, "warned");
+      await client.blacklist.set(
+        `${client.user.id}_${message.author.id}`,
+        "warned",
+      );
 
       await message.reply({
         embeds: [embed],

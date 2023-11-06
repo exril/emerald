@@ -24,11 +24,12 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     let voted = false;
-    let [noPrefixUser, premiumUser, blacklistUser, owner, admin] =
+    let [noPrefixUser, premiumUser, premiumGuild, blacklistUser, owner, admin] =
       await Promise.all([
         await client.noPrefix.get(`${client.user.id}_${message.author.id}`),
         await client.premium.get(`${client.user.id}_${message.author.id}`),
-        await client.blacklist.get(`${message.author.id}`),
+        await client.premium.get(`${client.user.id}_${message.guild.id}`),
+        await client.blacklist.get(`${client.user.id}_${message.author.id}`),
         await client.owners.find((x) => x === message.author.id),
         await client.admins.find((x) => x === message.author.id),
       ]);
@@ -62,7 +63,10 @@ module.exports = {
         `${message.author.id}`,
       );
       if (mentionRlBucket.limited && !owner && !admin)
-        return client.blacklist.set(`${message.author.id}`, true);
+        return client.blacklist.set(
+          `${client.user.id}_${message.author.id}`,
+          true,
+        );
       try {
         mentionRlBucket.consume();
       } catch (e) {}
@@ -117,7 +121,10 @@ module.exports = {
     );
 
     if (commandRlBucket.limited && !owner && !admin)
-      return client.blacklist.set(`${message.author.id}`, true);
+      return client.blacklist.set(
+        `${client.user.id}_${message.author.id}`,
+        true,
+      );
 
     try {
       commandRlBucket.consume();
@@ -308,7 +315,7 @@ module.exports = {
     /////////////////////////////////// Check vote locked commands ////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (command.vote && !owner && !premiumUser) {
+    if (command.vote && !owner && !premiumUser && !premiumGuild) {
       if (client.vote && client.topGgAuth) {
         await fetch(
           `https://top.gg/api/bots/${client.user.id}/check?userId=${message.author.id}`,

@@ -28,7 +28,7 @@ module.exports = class ExtendedClient extends Client {
       shardCount: getInfo().TOTAL_SHARDS,
     });
 
-    this.setMaxListeners(0);
+    this.setMaxListeners(25);
 
     this.cluster = new ClusterClient(this);
 
