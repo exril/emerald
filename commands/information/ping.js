@@ -24,10 +24,10 @@ module.exports = {
     const gen = (wsl, msg) => {
       let rnd = Math.random();
       wsl = parseInt(
-        wsl + Math.floor(rnd * (-wsl * 0.05 - wsl * 0.05)) + wsl * 0.05,
+        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1,
       );
       msg = parseInt(
-        msg + Math.floor(rnd * (-msg * 0.05 - msg * 0.05)) + msg * 0.05,
+        msg + Math.floor(rnd * (-msg * 0.02 - msg * 0.02)) + msg * 0.02,
       );
       return [wsl, msg];
     };
@@ -63,27 +63,28 @@ module.exports = {
         type: "line",
         data: {
           labels: [
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
           ],
           datasets: [
             {
               label: "Websocket Latency",
+              yAxisID: "ws",
               data: data.map((item) => item[0]),
               fill: true,
               borderColor: "#ff5500",
@@ -95,6 +96,7 @@ module.exports = {
             },
             {
               label: "Message Latency",
+              yAxisID: "msg",
               data: data.map((item) => item[1]),
               fill: true,
               borderColor: "#00d8ff",
@@ -110,7 +112,24 @@ module.exports = {
           scales: {
             yAxes: [
               {
+                id: "msg",
+                type: "linear",
+                position: "right",
                 ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: 200,
+                  callback: (value) => {
+                    return `${value}`;
+                  },
+                },
+              },
+              {
+                id: "ws",
+                type: "linear",
+                position: "left",
+                ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: msg,
                   callback: (value) => {
                     return `${value}`;
                   },
@@ -120,7 +139,7 @@ module.exports = {
           },
         },
       });
-      qc.setWidth(500);
+      qc.setWidth(400);
       qc.setHeight(200);
       qc.setBackgroundColor("transparent");
 
