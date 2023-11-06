@@ -24,10 +24,10 @@ module.exports = {
     const gen = (wsl, msg) => {
       let rnd = Math.random();
       wsl = parseInt(
-        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1,
+        wsl + Math.floor(rnd * (-wsl * 0.05 - wsl * 0.05)) + wsl * 0.05,
       );
       msg = parseInt(
-        msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.1,
+        msg + Math.floor(rnd * (-msg * 0.05 - msg * 0.05)) + msg * 0.05,
       );
       return [wsl, msg];
     };
