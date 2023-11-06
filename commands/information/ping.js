@@ -1,7 +1,7 @@
 /** @format */
 
-const { AttachmentBuilder } = require("discord.js");
-const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
+const QuickChart = require("quickchart-js");
+const qc = new QuickChart();
 
 module.exports = {
   name: "ping",
@@ -21,22 +21,13 @@ module.exports = {
       `${client.emoji.cool} **| Getting data. Please wait . . .**`,
     );
 
-    const width = 800;
-    const height = 250;
-    const backgroundColour = "white";
-    const chartJSNodeCanvas = new ChartJSNodeCanvas({
-      width,
-      height,
-      backgroundColour,
-    });
-
     const gen = (wsl, msg) => {
       let rnd = Math.random();
       wsl = parseInt(
-        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1,
+        wsl + Math.floor(rnd * (-wsl * 0.05 - wsl * 0.05)) + wsl * 0.05,
       );
       msg = parseInt(
-        msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.1,
+        msg + Math.floor(rnd * (-msg * 0.05 - msg * 0.05)) + msg * 0.05,
       );
       return [wsl, msg];
     };
@@ -61,68 +52,81 @@ module.exports = {
       const msg = m.createdAt - message.createdAt;
 
       let data = [];
-      for (i = 0; i < 6; i++) {
+      for (i = 0; i < 17; i++) {
         data.push(gen(ws, msg));
       }
       data.push([ws, msg]);
-      const configuration = {
+
+      ////////////////////////////////////////////////////////////////////////////
+
+      qc.setConfig({
         type: "line",
         data: {
-          labels: [" ", " ", " ", "Time ->", " ", " ", " "],
+          labels: [
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+          ],
           datasets: [
             {
-              label: "ws",
-              data: [
-                data[0][0],
-                data[1][0],
-                data[2][0],
-                data[3][0],
-                data[4][0],
-                data[5][0],
-                data[6][0],
-              ],
+              label: "Websocket Latency",
+              data: data.map((item) => item[0]),
               fill: true,
-              borderColor:
-                ws > 100
-                  ? ws < 150
-                    ? "rgb(250, 200, 0)"
-                    : "rgb(250, 50, 0)"
-                  : "rgb(50, 250, 0)",
+              borderColor: "#ff5500",
               borderWidth: 1,
+              backgroundColor: QuickChart.getGradientFillHelper("vertical", [
+                "#fc4e14",
+                "#ffffff",
+              ]),
             },
             {
-              label: "message",
-              data: [
-                data[0][1],
-                data[1][1],
-                data[2][1],
-                data[3][1],
-                data[4][1],
-                data[5][1],
-                data[6][1],
-              ],
+              label: "Message Latency",
+              data: data.map((item) => item[1]),
               fill: true,
-              borderColor:
-                msg > 250
-                  ? msg < 350
-                    ? "rgb(250, 200, 0)"
-                    : "rgb(250, 50, 0)"
-                  : "rgb(50, 250, 0)",
+              borderColor: "#00d8ff",
               borderWidth: 1,
+              backgroundColor: QuickChart.getGradientFillHelper("vertical", [
+                "#24ffd3",
+                "#ffffff",
+              ]),
             },
           ],
         },
         options: {
           scales: {
-            y: {
-              suggestedMin: 0,
-            },
+            yAxes: [
+              {
+                ticks: {
+                  callback: (value) => {
+                    return `${value}`;
+                  },
+                },
+              },
+            ],
           },
         },
-      };
+      });
+      qc.setWidth(500);
+      qc.setHeight(200);
+      qc.setBackgroundColor("transparent");
 
-      const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-      const attachment = new AttachmentBuilder(image, { name: "chart.png" });
+      let uri = await qc.getUrl();
+      ////////////////////////////////////////////////////////////////////////////
+
       const dbData = await josh();
       const PingEmbed = new client.embed()
         .desc(
@@ -134,10 +138,12 @@ module.exports = {
             `${client.emoji.message} - **MSG Latency : **\`${msg} ms\`\n`,
         )
         .thumb(client.user.displayAvatarURL())
-        .img(`attachment://${attachment.name}`)
+        .img(uri)
         .setFooter({ text: "By ━● 1sT-Services | Fast as Fuck boi" });
       await m
-        .edit({ embeds: [PingEmbed], files: [attachment] })
+        .edit({
+          embeds: [PingEmbed],
+        })
         .catch(() => {});
     });
   },
