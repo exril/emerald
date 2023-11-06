@@ -11,25 +11,40 @@ module.exports = async (client, message, pages) => {
     new client.button().secondary(`end`, `❌`),
   );
 
-  const curPage = await message.channel.send({
-    embeds: [
-      pages[page].setFooter({
-        text: `Page [${page + 1}/${pages.length}] By ━● 1sT-Services`,
-      }),
-    ],
-    components: [row],
-  });
+  const curPage = await message.channel
+    .send({
+      embeds: [
+        pages[page].setFooter({
+          text: `Page [${page + 1}/${pages.length}] By ━● 1sT-Services`,
+        }),
+      ],
+      components: [row],
+    })
+    .catch(() => {});
 
-  const filter = (m) => m.user.id === message.author.id;
+  const filter = async (interaction) => {
+    if (interaction.user.id === message.author.id) {
+      return true;
+    }
+    await interaction.reply({
+      embeds: [
+        new client.embed().desc(
+          `${client.emoji.no} **This isn't meant for you**`,
+        ),
+      ],
+      ephemeral: true,
+    });
+    return false;
+  };
   const collector = curPage?.createMessageComponentCollector({
     filter,
     time: 30000,
   });
 
-  collector.on("collect", async (i) => {
-    await i.deferUpdate();
+  collector.on("collect", async (interaction) => {
+    await interaction.deferUpdate();
 
-    switch (i.customId) {
+    switch (interaction.customId) {
       case "home":
         page = 0;
         await curPage
@@ -78,13 +93,6 @@ module.exports = async (client, message, pages) => {
   collector.on("end", () => {
     curPage
       .edit({
-        embeds: [
-          pages[page].setFooter({
-            text: `Powered by • 1sT-Services | Page • ${page + 1}/${
-              pages.length
-            }`,
-          }),
-        ],
         components: [],
       })
       .catch(() => {});

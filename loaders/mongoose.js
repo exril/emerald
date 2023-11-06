@@ -16,7 +16,7 @@ module.exports = async (client) => {
   if (!client.config.links.mongoURI)
     return client.log(
       `Mongoose not loaded !!! No valid Mongo URI provided !!`,
-      `error`,
+      `warn`,
     );
   mongoose.connect(client.config.links.mongoURI, dbOptions).catch((e) => {
     client.log(`Mongoose connection error ${e}`, "error");

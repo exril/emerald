@@ -18,7 +18,7 @@ module.exports = {
   userPerms: [],
   execute: async (client, message, args) => {
     let emb = new client.embed().desc(
-      `${client.emoji.cool} **| Getting data. Please wait . . .**`
+      `${client.emoji.cool} **| Getting data. Please wait . . .**`,
     );
 
     const width = 800;
@@ -33,24 +33,29 @@ module.exports = {
     const gen = (wsl, msg) => {
       let rnd = Math.random();
       wsl = parseInt(
-        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1
+        wsl + Math.floor(rnd * (-wsl * 0.1 - wsl * 0.1)) + wsl * 0.1,
       );
       msg = parseInt(
-        msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.1
+        msg + Math.floor(rnd * (-msg * 0.1 - msg * 0.1)) + msg * 0.1,
       );
       return [wsl, msg];
     };
 
-    await message.channel.send({ embeds: [emb] }).then(async (m) => {
+    await message.reply({ embeds: [emb] }).then(async (m) => {
       let josh = async () => {
-        const start = Date.now();
+        const start = performance.now();
         await client.noPrefix.set("test", true);
-        const write = Date.now();
+        const write = performance.now();
         await client.noPrefix.get("test");
-        const read = Date.now();
+        const read = performance.now();
         await client.noPrefix.delete("test");
-        const del = Date.now();
-        return [del - start, write - start, read - write, del - read];
+        const del = performance.now();
+        return [
+          (del - start).toFixed(2),
+          (write - start).toFixed(2),
+          (read - write).toFixed(2),
+          (del - read).toFixed(2),
+        ];
       };
       const ws = client.ws.ping;
       const msg = m.createdAt - message.createdAt;
@@ -126,7 +131,7 @@ module.exports = {
             `${client.emoji.json} -  **DB Deleteㅤ : **\`${dbData[3]} ms\`\n` +
             `${client.emoji.json} - **DB Totalㅤ : **\`${dbData[0]} ms\`\n` +
             `${client.emoji.cloud} - **WS Latencyㅤ: **\`${ws} ms\`\n` +
-            `${client.emoji.message} - **MSG Latency : **\`${msg} ms\`\n`
+            `${client.emoji.message} - **MSG Latency : **\`${msg} ms\`\n`,
         )
         .thumb(client.user.displayAvatarURL())
         .img(`attachment://${attachment.name}`)

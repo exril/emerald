@@ -24,15 +24,17 @@ module.exports = {
       .desc(desc);
     try {
       let owner = await client.users.fetch(guild.ownerId);
-      owner.send({
-        embeds: [e],
-        components: [
-          new ActionRowBuilder().addComponents(
-            new client.button().link(`Support Server`, `${client.support}`),
-            new client.button().link(`Get Premium`, `${client.support}`)
-          ),
-        ],
-      });
+      await owner
+        .send({
+          embeds: [e],
+          components: [
+            new ActionRowBuilder().addComponents(
+              new client.button().link(`Support Server`, `${client.support}`),
+              new client.button().link(`Get Premium`, `${client.support}`),
+            ),
+          ],
+        })
+        .catch(() => {});
     } catch (e) {}
   },
 };

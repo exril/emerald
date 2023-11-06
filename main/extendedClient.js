@@ -78,14 +78,11 @@ module.exports = class ExtendedClient extends Client {
           `Commands cannot be vote locked !!! ${
             this.vote ? `Top GG Auth Token` : `Vote URI`
           } is not provided !!`,
-          `error`,
+          `warn`,
         );
       this.embed = require("@plugins/embed.js")(color || "#2c2d31");
-      await super.login(token).catch(() => {
-        this.log(
-          `Client cannot be logged in !!! Valid Token not provided !!`,
-          `error`,
-        );
+      await super.login(token).catch((error) => {
+        this.log(`Client cannot be logged in !!! ${error}`, `warn`);
         process.exit(1);
       });
     };

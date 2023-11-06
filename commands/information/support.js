@@ -21,6 +21,13 @@ module.exports = {
         .link("Click to join Support Server", client.support)
         .setEmoji(client.emoji.support),
     );
-    await message.channel.send({ components: [row] });
+    await message.reply({
+      embeds: [
+        new client.embed().desc(
+          `${client.emoji.bell} **Click the button below to Join my support server **`,
+        ),
+      ],
+      components: [row],
+    });
   },
 };

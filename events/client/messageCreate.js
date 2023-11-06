@@ -1,7 +1,8 @@
 /** @format */
 
 const { RateLimitManager } = require("@sapphire/ratelimits");
-const rateLimitManager = new RateLimitManager(10000, 4);
+const spamRateLimitManager = new RateLimitManager(10000, 5);
+const cooldownRateLimitManager = new RateLimitManager(5000);
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -23,7 +24,7 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     let voted = false;
-    const [noPrefixUser, premiumUser, blacklistUser, developer, admin] =
+    let [noPrefixUser, premiumUser, blacklistUser, owner, admin] =
       await Promise.all([
         await client.noPrefix.get(`${client.user.id}_${message.author.id}`),
         await client.premium.get(`${client.user.id}_${message.author.id}`),
@@ -31,6 +32,8 @@ module.exports = {
         await client.owners.find((x) => x === message.author.id),
         await client.admins.find((x) => x === message.author.id),
       ]);
+
+    if (owner || admin) blacklistUser = false;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////// Dokdo ///////////////////////////////////////////////
@@ -55,8 +58,10 @@ module.exports = {
     if (message.content.match(mention)) {
       if (blacklistUser)
         return await client.emit("blUser", message, blacklistUser);
-      const mentionRlBucket = rateLimitManager.acquire(`${message.author.id}`);
-      if (mentionRlBucket.limited && !developer && !admin)
+      const mentionRlBucket = spamRateLimitManager.acquire(
+        `${message.author.id}`,
+      );
+      if (mentionRlBucket.limited && !owner && !admin)
         return client.blacklist.set(`${message.author.id}`, true);
       try {
         mentionRlBucket.consume();
@@ -76,7 +81,7 @@ module.exports = {
 
     const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const prefixRegex = new RegExp(
-      `^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`
+      `^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`,
     );
     if (!prefixRegex.test(message.content.toLowerCase())) return;
     const [matchedPrefix] = message.content.toLowerCase().match(prefixRegex);
@@ -90,7 +95,7 @@ module.exports = {
     const command =
       client.commands.get(commandName) ||
       client.commands.find(
-        (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
+        (cmd) => cmd.aliases && cmd.aliases.includes(commandName),
       );
 
     if (!command) return;
@@ -107,9 +112,11 @@ module.exports = {
     /////////////////////////////// Auto - Blacklist on command spam //////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const commandRlBucket = rateLimitManager.acquire(`${message.author.id}`);
+    const commandRlBucket = spamRateLimitManager.acquire(
+      `${message.author.id}`,
+    );
 
-    if (commandRlBucket.limited && !developer && !admin)
+    if (commandRlBucket.limited && !owner && !admin)
       return client.blacklist.set(`${message.author.id}`, true);
 
     try {
@@ -123,32 +130,35 @@ module.exports = {
     if (!client.cooldowns.has(command.name)) {
       client.cooldowns.set(
         command.name,
-        new (require("discord.js").Collection)()
+        new (require("discord.js").Collection)(),
       );
     }
 
     const now = Date.now();
     const timestamps = client.cooldowns.get(command.name);
-    const cooldownAmount = parseInt(command.cooldown) || 5000;
+    const cooldownAmount = parseInt(command.cooldown) * 1000 || 5 * 1000;
 
-    if (timestamps.has(message.author.id) && !developer) {
+    if (timestamps.has(message.author.id) && !owner && !admin) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
       if (now < expirationTime) {
-        const expiredTimestamp = Math.round((expirationTime - now) / 1000);
-        description = ` Please wait ${expiredTimestamp} second(s) before reusing the command **\`${command.name}\``;
-        return message.channel
-          .send({
-            embeds: [
-              new client.embed().desc(`${client.emoji.cool} **${description}`),
-            ],
-          })
-          .then(
-            async (m) =>
-              await setTimeout(async () => {
-                m.delete().catch(() => {});
-              }, 3000)
-          );
+        const cooldownRlBucket = cooldownRateLimitManager.acquire(
+          `${message.author.id}_${command.name}`,
+        );
+        if (cooldownRlBucket.limited) return;
+        try {
+          cooldownRlBucket.consume();
+        } catch (e) {}
+
+        const expiredTimestamp = Math.round(expirationTime - now);
+        description = ` Please wait ${client.formatTime(
+          expiredTimestamp,
+        )} before reusing the command **\`${command.name}\``;
+        return message.channel.send({
+          embeds: [
+            new client.embed().desc(`${client.emoji.cool} **${description}`),
+          ],
+        });
       }
     }
 
@@ -179,7 +189,7 @@ module.exports = {
         .send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.warn} **I need \`SEND_MESSAGES\` permission in ${message.channel} to execute the command \`${command.name}\`**`
+              `${client.emoji.warn} **I need \`SEND_MESSAGES\` permission in ${message.channel} to execute the command \`${command.name}\`**`,
             ),
           ],
         })
@@ -198,21 +208,29 @@ module.exports = {
         .send({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.warn} **I need \`EMBED_LINKS\` permission in ${message.channel} to execute the command \`${command.name}\`**`
+              `${client.emoji.warn} **I need \`EMBED_LINKS\` permission in ${message.channel} to execute the command \`${command.name}\`**`,
             ),
           ],
         })
         .catch(() => {});
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// Check args needed or not if yes check provided or not /////////////////////
+    ////////////////////////// Check args and emit command infoRequested event ////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+    if (args[0]?.toLowerCase() == "-h")
+      return await client.emit("infoRequested", message, command);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////// Check args needed or not if yes check provided or not /////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
     if (command.args && !args.length) {
       let reply = `${client.emoji.no} **Invalid/No args provided**`;
       if (command.usage)
         reply += `\n${client.emoji.bell} Usage: \`${prefix}${command.name} ${command.usage}\``;
-      return message.channel.send({ embeds: [new client.embed().desc(reply)] });
+      return await message.reply({
+        embeds: [new client.embed().desc(reply)],
+      });
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,12 +241,12 @@ module.exports = {
       command.userPerms &&
       !message.member.permissions.has(command.userPerms)
     ) {
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(
             `${client.emoji.warn} **You need \`${command.userPerms.join(
-              ", "
-            )}\` permission/s to use this command**`
+              ", ",
+            )}\` permission/s to use this command**`,
           ),
         ],
       });
@@ -245,12 +263,12 @@ module.exports = {
         .permissionsFor(message.guild.members.me)
         ?.has(command.botPerms)
     ) {
-      return message.channel.send({
+      return await message.reply({
         embeds: [
           new client.embed().desc(
             `${client.emoji.warn} **I need \`${command.userPerms.join(
-              ", "
-            )}\` in ${message.channel} permission/s to execute this command**`
+              ", ",
+            )}\` in ${message.channel} permission/s to execute this command**`,
           ),
         ],
       });
@@ -261,11 +279,11 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     if (command.admin) {
-      if (!developer && !admin)
-        return message.channel.send({
+      if (!owner && !admin)
+        return await message.reply({
           embeds: [
-            embed.desc(
-              `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`
+            new client.embed().desc(
+              `${client.emoji.admin} **Only my Owner/s and Admin/s can use this command**`,
             ),
           ],
         });
@@ -276,11 +294,11 @@ module.exports = {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     if (command.owner && !command.admin) {
-      if (!developer)
-        return message.channel.send({
+      if (!owner)
+        return await message.reply({
           embeds: [
-            embed.desc(
-              `${client.emoji.king} **Only my Owner/s can use this command**`
+            new client.embed().desc(
+              `${client.emoji.king} **Only my Owner/s can use this command**`,
             ),
           ],
         });
@@ -290,7 +308,7 @@ module.exports = {
     /////////////////////////////////// Check vote locked commands ////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (command.vote && !developer && !premiumUser) {
+    if (command.vote && !owner && !premiumUser) {
       if (client.vote && client.topGgAuth) {
         await fetch(
           `https://top.gg/api/bots/${client.user.id}/check?userId=${message.author.id}`,
@@ -299,7 +317,7 @@ module.exports = {
             headers: {
               Authorization: client.topGgAuth,
             },
-          }
+          },
         )
           .then((res) => res.json())
           .then((json) => {
@@ -310,11 +328,11 @@ module.exports = {
             return (voted = true);
           });
         if (!voted)
-          return message.channel.send({
+          return await message.reply({
             embeds: [
-              embed.desc(
+              new client.embed().desc(
                 `${client.emoji.premium} **Only my Voter/s can use this command**\n` +
-                  `[Click to vote me](${client.vote})`
+                  `[Click to vote me](${client.vote})`,
               ),
             ],
           });

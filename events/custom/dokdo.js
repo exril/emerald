@@ -9,6 +9,7 @@ module.exports = {
 
     new (require("dokdo"))(client, {
       owners: client.owners,
+      secrets: [client.token],
       aliases: ["jsk", "Jsk"],
       prefix: prefix,
     }).run(message);
