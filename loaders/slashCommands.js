@@ -11,9 +11,13 @@ module.exports = async (client) => {
     for (const file of commandFiles) {
       count++;
       const command = require(`../slashCommands/${dir}/${file}`);
-      if (command.name.length > 3) return client.log(`[${command.name}] Command name is too long, skip this command...`, "warn");
+      if (command.name.length > 3)
+        return client.log(
+          `[${command.name}] - Command name is too long, skipping this command`,
+          "warn",
+        );
       client.slashCommands.set(command.name, command);
     }
   });
-  client.log(`Loaded ${count} slash commands`, "cmd");
+  client.log(`Loaded ${count} slash Command/(s)`, "cmd");
 };

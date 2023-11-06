@@ -29,7 +29,7 @@ module.exports = {
       description: "Example",
       required: true,
       type: ApplicationCommandOptionType.String,
-      autocomplete: true
+      autocomplete: true,
     },
     {
       name: "example_args",

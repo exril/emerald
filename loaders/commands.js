@@ -14,5 +14,5 @@ module.exports = async (client) => {
       client.commands.set(command.name, command);
     }
   });
-  client.log(`Loaded ${count} Commands`, "cmd");
+  client.log(`Loaded ${count} Command/(s)`, "cmd");
 };

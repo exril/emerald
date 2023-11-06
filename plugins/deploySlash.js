@@ -1,10 +1,10 @@
+/** @format */
+
 const chillout = require("chillout");
 const { makeSureFolderExists } = require("stuffs");
 const path = require("path");
 const readdirRecursive = require("recursive-readdir");
-const {
-  ApplicationCommandOptionType,
-} = require("discord.js");
+const { ApplicationCommandOptionType } = require("discord.js");
 
 module.exports = async (client) => {
   let command = [];
@@ -15,7 +15,7 @@ module.exports = async (client) => {
 
   let store = [];
 
-  client.log(`Reading interaction files...`);
+  client.log(`Reading slash command/(s) files`, `debug`);
 
   let interactionFilePaths = await readdirRecursive(interactionsFolder);
 
@@ -133,8 +133,9 @@ module.exports = async (client) => {
     return all;
   }, []);
 
-  if (command.length === 0)
-    return client.log("No interactions loaded. Exiting deploy...");
   await client.application.commands.set(command);
-  client.log("Interactions deployed! Exiting deploy...");
+  client.log(
+    `${client.slashCommands.size || 0} Application Command/(s) Deployed`,
+    `debug`,
+  );
 };
