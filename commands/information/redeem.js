@@ -29,7 +29,6 @@ module.exports = {
       })
       .then(async (m) => {
         let code = args[0];
-        console.log(code);
         let valid = await client.vouchers.get(code);
         if (!valid)
           return m.edit({
@@ -87,10 +86,7 @@ module.exports = {
                   name: `Privilages attained :\n`,
                   value:
                     `${client.emoji.point} No prefix\n` +
-                    `${client.emoji.point} Better sound\n` +
-                    `${client.emoji.point} Access to Custom-Eq\n` +
-                    `${client.emoji.point} Access to several radios\n` +
-                    `${client.emoji.point} 247 in VC and more . . .`,
+                    `${client.emoji.point} Vote bypass and more . . .`,
                 })
                 .thumb(client.user.displayAvatarURL())
                 .setFooter({
