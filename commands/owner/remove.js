@@ -1,6 +1,6 @@
 /** @format */
 
-const pagination = require("@functions/pagination.js");
+const pagination = require("@utils/pagination.js");
 
 module.exports = {
   name: "remove",
@@ -15,6 +15,10 @@ module.exports = {
   owner: true,
   botPerms: [],
   userPerms: [],
+  player: false,
+  playing: false,
+  inVoiceChannel: false,
+  sameVoiceChannel: false,
   execute: async (client, message, args) => {
     let id = message.mentions?.users?.first()?.id || args[0] || null;
 
@@ -41,16 +45,18 @@ module.exports = {
           return await message.reply({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> doesn't have this privilage**`,
+                `${client.emoji.no} **Operation unsuccessful**\n` +
+                  `${client.emoji.bell} <@${id}> doesn't have this privilage`,
               ),
             ],
           });
 
-        await client.noPrefix.delete(`${id}`);
+        await client.noPrefix.delete(`${client.user.id}_${id}`);
         await message.reply({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.off} **No prefix privilage removed from <@${id}>**`,
+              `${client.emoji.yes} **Operation successful**\n` +
+                `${client.emoji.off} No prefix privilage removed from <@${id}>`,
             ),
           ],
         });
@@ -61,7 +67,8 @@ module.exports = {
           return await message.reply({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> is not blacklisted**`,
+                `${client.emoji.no} **Operation unsuccessful**\n` +
+                  `${client.emoji.bell} <@${id}> is not blacklisted`,
               ),
             ],
           });
@@ -70,7 +77,8 @@ module.exports = {
         await message.reply({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.off} **Removed <@${id}> from blacklist**`,
+              `${client.emoji.yes} **Operation successful**\n` +
+                `${client.emoji.off} Removed <@${id}> from blacklist`,
             ),
           ],
         });
@@ -81,7 +89,8 @@ module.exports = {
           return await message.reply({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> is not a premium subscriber**`,
+                `${client.emoji.no} **Operation unsuccessful**\n` +
+                  `${client.emoji.bell} <@${id}> is not a premium subscriber`,
               ),
             ],
           });
@@ -90,7 +99,8 @@ module.exports = {
         await message.reply({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.off} **Premium subscription revoked for <@${id}>**`,
+              `${client.emoji.yes} **Operation successful**\n` +
+                `${client.emoji.off} Premium subscription revoked for <@${id}>`,
             ),
           ],
         });

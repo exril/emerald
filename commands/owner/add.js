@@ -1,6 +1,6 @@
 /** @format */
 
-const pagination = require("@functions/pagination.js");
+const pagination = require("@utils/pagination.js");
 
 module.exports = {
   name: "add",
@@ -15,6 +15,10 @@ module.exports = {
   owner: true,
   botPerms: [],
   userPerms: [],
+  player: false,
+  playing: false,
+  inVoiceChannel: false,
+  sameVoiceChannel: false,
   execute: async (client, message, args) => {
     let id = message.mentions?.users?.first()?.id || args[0] || null;
 
@@ -41,7 +45,8 @@ module.exports = {
           return await message.reply({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> already has this privilage**`,
+                `${client.emoji.no} **Operation unsuccessful**\n` +
+                  `${client.emoji.bell} <@${id}> already has this privilage`,
               ),
             ],
           });
@@ -50,7 +55,8 @@ module.exports = {
         await message.reply({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.on} **No prefix privilage added to <@${id}>**`,
+              `${client.emoji.yes} **Operation successful**\n` +
+                `${client.emoji.on} No prefix privilage added to <@${id}>`,
             ),
           ],
         });
@@ -61,7 +67,8 @@ module.exports = {
           return await message.reply({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> is already blacklisted**`,
+                `${client.emoji.no} **Operation unsuccessful**\n` +
+                  `${client.emoji.bell} <@${id}> is already blacklisted`,
               ),
             ],
           });
@@ -70,7 +77,8 @@ module.exports = {
         await message.reply({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.on} **Added <@${id}> to blacklist**`,
+              `${client.emoji.yes} **Operation successful**\n` +
+                `${client.emoji.on} Added <@${id}> to blacklist`,
             ),
           ],
         });
@@ -81,16 +89,18 @@ module.exports = {
           return await message.reply({
             embeds: [
               new client.embed().desc(
-                `${client.emoji.bell} **<@${id}> is already a premium subscriber**`,
+                `${client.emoji.no} **Operation unsuccessful**\n` +
+                  `${client.emoji.bell} <@${id}> is already a premium subscriber`,
               ),
             ],
           });
 
-        await client.noPrefix.set(`${client.user.id}_${id}`, true);
+        await client.premium.set(`${client.user.id}_${id}`, true);
         await message.reply({
           embeds: [
             new client.embed().desc(
-              `${client.emoji.on} **Premium subscription added to <@${id}>**`,
+              `${client.emoji.yes} **Operation successful**\n` +
+                `${client.emoji.on} Premium subscription added to <@${id}>`,
             ),
           ],
         });
