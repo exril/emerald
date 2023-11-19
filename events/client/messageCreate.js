@@ -45,7 +45,7 @@ module.exports = {
         noPrefixUser && !message.content.startsWith(client.prefix)
           ? ""
           : client.prefix;
-      return await client.emit("dokdo", message, pfx);
+      return await client.jsk.run(message);
     }
 
     let prefix = client.prefix;

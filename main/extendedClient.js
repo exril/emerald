@@ -1,5 +1,6 @@
 /** @format */
 
+const Jishaku = require("dokdo");
 require("module-alias/register");
 const { Collection, Partials, Client } = require("discord.js");
 const { ClusterClient, getInfo } = require("discord-hybrid-sharding");
@@ -72,12 +73,16 @@ module.exports = class ExtendedClient extends Client {
 
     this.connect = async (token, prefix = "%", color, auth, voteUri) => {
       this.prefix = prefix;
+      this.jsk = new Jishaku(this, {
+        prefix: "",
+        owners: this.owners,
+        aliases: ["jsk", "Jsk", "JSK"],
+      });
       this.vote = voteUri;
       this.topGgAuth = auth;
       if (!voteUri || auth)
         this.log(
-          `Commands cannot be vote locked !!! ${
-            this.vote ? `Top GG Auth Token` : `Vote URI`
+          `Commands cannot be vote locked !!! ${this.vote ? `Top GG Auth Token` : `Vote URI`
           } is not provided !!`,
           `warn`,
         );
