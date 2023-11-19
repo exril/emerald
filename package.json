@@ -58,6 +58,7 @@
     "pretty-check": "npx prettier --check .",
     "pretty-format": "npx prettier --write .",
     "dev": "nodemon --ignore josh-data/ launcher.js",
-    "test": "echo \"Error: No tests specified\" && exit 1"
+    "test": "echo \"Error: No tests specified\" && exit 1",
+    "build": "echo \"Installing node modules. Please be patient. . . \" && npm install"
   }
 }
